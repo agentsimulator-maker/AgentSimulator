@@ -6,7 +6,8 @@
     <title>Agent Simulator</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght=400;500;600;700&family=Fredoka:wght=600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Fredoka:wght@600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     
     <script>
         tailwind.config = {
@@ -59,7 +60,6 @@
             box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
         }
 
-        /* --- BUTTON EFFECT KEPT EXACTLY UNCHANGED --- */
         .btn-cartoon {
             background-color: #8B5CF6;
             color: #ffffff;
@@ -85,7 +85,6 @@
         .btn-cartoon:hover:not(:disabled) {
             background-color: #7C3AED;
         }
-        /* -------------------------------------------- */
 
         .input-glass {
             background: rgba(255, 255, 255, 0.7);
@@ -114,7 +113,6 @@
         .no-scrollbar::-webkit-scrollbar { display: none; }
         .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
 
-        /* UPGRADED HERO FLOATING EFFECT */
         @keyframes float {
             0%, 100% { 
                 transform: translateY(0px) rotate(0deg); 
@@ -127,7 +125,6 @@
         }
         .animate-float { animation: float 5s ease-in-out infinite; }
 
-        /* BACKDROP GLOW EFFECTS */
         .ambient-glow {
             position: absolute;
             width: 250px;
@@ -188,26 +185,18 @@
             margin-right: 10px;
             transition: background 0.2s;
         }
-        input[type="file"]::file-selector-button:hover {
-            background-color: rgba(255, 255, 255, 1);
-        }
-        html.dark input[type="file"]::file-selector-button {
-            background-color: #374151;
-            color: #fff;
-            border-color: rgba(255,255,255,0.1);
-        }
-        html.dark input[type="file"]::file-selector-button:hover {
-            background-color: #4b5563;
-        }
+        input[type="file"]::file-selector-button:hover { background-color: rgba(255, 255, 255, 1); }
+        html.dark input[type="file"]::file-selector-button { background-color: #374151; color: #fff; border-color: rgba(255,255,255,0.1); }
+        html.dark input[type="file"]::file-selector-button:hover { background-color: #4b5563; }
 
         #toast {
             transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), opacity 0.3s ease;
             transform: translateY(100px) scale(0.9);
             opacity: 0;
+            z-index: 9999;
         }
         #toast.show { transform: translateY(0) scale(1); opacity: 1; }
 
-        /* QoL Tab Active Line Animation */
         .nav-btn { position: relative; padding-bottom: 4px; }
         .nav-btn::after {
             content: ''; position: absolute; bottom: 0; left: 50%; width: 0; height: 3px;
@@ -215,7 +204,6 @@
         }
         .nav-btn.active-tab::after { width: 80%; }
 
-        /* Back to top button styling */
         #btn-back-to-top {
             position: fixed; bottom: 24px; right: 24px; z-index: 80; opacity: 0; transform: translateY(20px);
             transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); pointer-events: none;
@@ -225,7 +213,6 @@
 </head>
 <body class="min-h-screen flex flex-col relative dark:text-gray-100">
 
-    <!-- Ambient Visual Glow Component Behind Hero -->
     <div class="ambient-glow"></div>
 
     <nav class="sticky top-0 z-50 glass-card mx-4 mt-4 px-6 py-4 flex justify-between items-center shadow-lg">
@@ -234,7 +221,6 @@
             <span id="nav-display-name" class="text-2xl font-cartoon font-bold tracking-wide group-hover:text-brand-primary dark:text-white transition">Agent Simulator</span>
         </div>
         
-        <!-- Desktop Tabs -->
         <div class="hidden md:flex gap-6 font-semibold text-gray-600 dark:text-gray-300 text-lg items-center">
             <button onclick="switchTab('home')" class="nav-btn active-tab hover:text-black dark:hover:text-white transition text-black dark:text-white" data-target="home">Home</button>
             <button onclick="switchTab('studio-assets')" class="nav-btn hover:text-black dark:hover:text-white transition" data-target="studio-assets">Studio Assets</button>
@@ -251,28 +237,29 @@
             <button onclick="toggleDarkMode()" class="w-10 h-10 rounded-xl bg-black/5 dark:bg-white/5 flex items-center justify-center text-xl text-gray-600 dark:text-gray-300 hover:text-brand-primary dark:hover:text-brand-primary transition" title="Toggle Dark Mode">
                 <i id="dark-icon" class="fa-solid fa-sun"></i>
             </button>
+            
             <div id="user-controls" class="hidden md:block">
-                <button onclick="document.getElementById('auth-modal').classList.remove('hidden')" class="btn-cartoon px-6 py-2">Login</button>
+                <button onclick="document.getElementById('auth-modal').classList.remove('hidden')" class="btn-cartoon px-6 py-2">Login / Join</button>
             </div>
-            <!-- Hamburger Menu Icon for Mobile Only -->
+            
             <button onclick="toggleMobileNav()" class="md:hidden text-2xl text-gray-700 dark:text-gray-200 focus:outline-none w-10 h-10 rounded-xl bg-black/5 dark:bg-white/5 flex items-center justify-center transition">
                 <i id="mobile-menu-icon" class="fa-solid fa-bars"></i>
             </button>
         </div>
 
         <div id="profile-dropdown" class="hidden absolute right-4 top-20 w-72 glass-card p-5 shadow-xl border border-gray-200 dark:border-gray-800 z-50 pop-in">
-            <h4 class="font-cartoon text-lg text-gray-900 dark:text-white border-b border-gray-200 dark:border-gray-700 pb-2 mb-3">Profile Settings</h4>
+            <h4 class="font-cartoon text-lg text-gray-900 dark:text-white border-b border-gray-200 dark:border-gray-700 pb-2 mb-3">Settings Menu</h4>
             <div class="space-y-2 mb-4">
                 <button onclick="openUserEditModal()" class="w-full text-left font-semibold text-sm text-gray-700 dark:text-gray-300 hover:bg-brand-primary/10 p-2 rounded-lg transition"><i class="fa-solid fa-user-pen mr-2 text-brand-primary"></i> Edit Account Info</button>
-                <button onclick="showToast('Preferences updated.', 'success')" class="w-full text-left font-semibold text-sm text-gray-700 dark:text-gray-300 hover:bg-brand-primary/10 p-2 rounded-lg transition"><i class="fa-solid fa-sliders mr-2 text-brand-primary"></i> Preferences</button>
             </div>
-            <button onclick="logout()" class="w-full bg-red-500 hover:bg-red-600 text-white font-bold py-2.5 px-4 rounded-xl shadow-sm text-sm transition mt-2 flex items-center justify-center gap-2">
-                <i class="fa-solid fa-right-from-bracket"></i> Log Out
-            </button>
+            <div id="logout-btn-container" class="hidden">
+                <button onclick="logout()" class="w-full bg-red-500 hover:bg-red-600 text-white font-bold py-2.5 px-4 rounded-xl shadow-sm text-sm transition mt-2 flex items-center justify-center gap-2">
+                    <i class="fa-solid fa-right-from-bracket"></i> Log Out
+                </button>
+            </div>
         </div>
     </nav>
 
-    <!-- Mobile Drawer for Tab Navigation -->
     <div id="mobile-nav-drawer" class="hidden flex-col mx-4 mt-2 p-4 glass-card shadow-md gap-3 md:hidden z-40 font-semibold text-gray-600 dark:text-gray-300">
         <button onclick="switchTab('home'); toggleMobileNav()" class="w-full text-left py-2 px-3 rounded-xl hover:bg-brand-primary/10 flex items-center gap-2"><i class="fa-solid fa-house text-brand-primary w-5"></i>Home</button>
         <button onclick="switchTab('studio-assets'); toggleMobileNav()" class="w-full text-left py-2 px-3 rounded-xl hover:bg-brand-primary/10 flex items-center gap-2"><i class="fa-solid fa-box-open text-brand-primary w-5"></i>Studio Assets</button>
@@ -281,15 +268,14 @@
         <button onclick="switchTab('support'); toggleMobileNav()" class="w-full text-left py-2 px-3 rounded-xl hover:bg-brand-primary/10 flex items-center gap-2"><i class="fa-solid fa-headset text-brand-primary w-5"></i>Support</button>
         <button onclick="switchTab('admin'); toggleMobileNav()" id="nav-admin-mobile" class="w-full text-left py-2 px-3 rounded-xl text-red-500 bg-red-100/40 dark:bg-red-950/20 hidden flex items-center gap-2"><i class="fa-solid fa-shield-halved w-5"></i>Admin Panel</button>
         <hr class="border-gray-200 dark:border-gray-700 my-1">
-        <div id="user-controls-mobile" class="pt-1">
-            <button onclick="document.getElementById('auth-modal').classList.remove('hidden'); toggleMobileNav()" class="w-full btn-cartoon py-2">Login</button>
+        <div id="user-controls-mobile" class="pt-1 flex flex-col gap-2">
+            <button onclick="document.getElementById('auth-modal').classList.remove('hidden'); toggleMobileNav()" class="w-full btn-cartoon py-2">Login / Join</button>
         </div>
     </div>
 
     <main class="flex-grow p-8 max-w-7xl mx-auto w-full z-10">
         
         <section id="home" class="tab-content block opacity-100">
-            <!-- Hero Stats & Visual -->
             <div class="grid grid-cols-1 md:grid-cols-2 gap-12 items-center mb-16 pt-6">
                 <div class="pop-in delay-1">
                     <div class="inline-block bg-white/60 dark:bg-slate-800/60 backdrop-blur-md border border-white dark:border-slate-700 rounded-full px-4 py-1 mb-4 shadow-sm font-semibold text-sm">
@@ -304,7 +290,6 @@
                         <button onclick="switchTab('studio-assets')" id="display-home-btn" class="btn-cartoon px-8 py-3 text-lg transform hover:scale-105 transition-transform">Browse Assets!</button>
                     </div>
                 </div>
-                <!-- 3D Layer Floating Image Box Component -->
                 <div class="glass-card p-4 relative animate-float pop-in delay-2 group border border-white/80 dark:border-slate-800/80">
                     <div class="overflow-hidden rounded-xl relative">
                         <img id="display-home-img" src="hero-showcase.png" onerror="this.src='https://images.unsplash.com/photo-1605342417730-10ebcb1a1ab5?w=800&q=80'" alt="Home Visual" class="w-full h-80 object-cover shadow-inner bg-gray-200 dark:bg-gray-800 group-hover:scale-105 transition-transform duration-700 ease-out">
@@ -349,7 +334,6 @@
                 </div>
             </div>
 
-            <!-- About Me Section -->
             <div class="glass-card p-8 md:p-12 mb-10 pop-in delay-2 mt-8 border-t-4 border-brand-primary relative overflow-hidden">
                 <div class="absolute top-0 right-0 p-4 opacity-5 pointer-events-none select-none">
                     <i class="fa-solid fa-address-card text-9xl text-brand-primary"></i>
@@ -485,7 +469,6 @@
             </div>
         </section>
 
-        <!-- Admin Tab -->
         <section id="admin" class="tab-content hidden opacity-0">
             <div class="flex gap-3 mb-8 glass-card p-3 overflow-x-auto no-scrollbar">
                 <button onclick="toggleAdminPanel('upload')" id="btn-admin-upload" class="font-bold text-white bg-green-500 rounded-xl px-5 py-2 shadow-sm transition whitespace-nowrap">Upload Content</button>
@@ -494,14 +477,11 @@
                 <button onclick="toggleAdminPanel('inbox')" id="btn-admin-inbox" class="font-bold text-gray-600 dark:text-gray-300 hover:text-gray-900 hover:bg-white/50 rounded-xl px-5 py-2 transition whitespace-nowrap">Support Inbox</button>
             </div>
 
-            <!-- Upload Section -->
             <div id="admin-upload-section" class="glass-card p-8 pop-in block">
                 <h2 class="text-2xl font-bold text-gray-900 dark:text-white mb-2 flex items-center gap-3">
                     <div class="bg-green-100/50 dark:bg-green-950/40 p-2 rounded-lg border border-green-200 text-green-600 shadow-sm"><i class="fa-solid fa-cloud-arrow-up"></i></div> Upload to Website
                 </h2>
-                <p class="text-gray-500 mb-8">Add new assets, awards, or videos to the tabs.</p>
-                
-                <form id="admin-upload-form" onsubmit="handleAdminUpload(event)">
+                <form id="admin-upload-form" onsubmit="handleAdminUpload(event)" class="mt-8">
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-5">
                         <div>
                             <label class="block font-semibold mb-2 text-gray-700 dark:text-gray-300 text-sm">Upload Destination</label>
@@ -556,146 +536,83 @@
                 </form>
             </div>
 
-            <!-- Edit Home Page Section -->
             <div id="admin-edit-home-section" class="hidden glass-card p-8 pop-in">
                 <h2 class="text-2xl font-bold text-gray-900 dark:text-white mb-2 flex items-center gap-3">
                     <div class="bg-purple-100/50 dark:bg-purple-950/40 p-2 rounded-lg border border-purple-200 text-brand-primary shadow-sm"><i class="fa-solid fa-pen-to-square"></i></div> Edit Home Page Elements
                 </h2>
-                <p class="text-gray-500 mb-6 text-sm">Modify titles, descriptions, branding visuals, badge elements, and statistics grids.</p>
-                
-                <form id="edit-home-form" onsubmit="handleHomeEdit(event)">
+                <form id="edit-home-form" onsubmit="handleHomeEdit(event)" class="mt-8">
                     <div class="p-5 bg-purple-50/60 dark:bg-purple-950/20 border border-purple-200 dark:border-purple-900 rounded-xl mb-6 shadow-inner">
                         <h4 class="font-bold text-brand-primary border-b border-purple-200 dark:border-purple-800 pb-2 mb-4"><i class="fa-solid fa-tags"></i> Hero Branding & Accents</h4>
                         <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
-                            <div>
-                                <label class="block font-semibold mb-2 text-gray-700 dark:text-gray-300 text-sm">Top Star Badge</label>
-                                <input type="text" id="edit-badge1" class="w-full input-glass p-2">
-                            </div>
-                            <div>
-                                <label class="block font-semibold mb-2 text-gray-700 dark:text-gray-300 text-sm">Image Corner Badge</label>
-                                <input type="text" id="edit-badge2" class="w-full input-glass p-2">
-                            </div>
-                            <div>
-                                <label class="block font-semibold mb-2 text-gray-700 dark:text-gray-300 text-sm">Main Button Text</label>
-                                <input type="text" id="edit-btn-text" class="w-full input-glass p-2">
-                            </div>
+                            <div><label class="block font-semibold mb-2 text-gray-700 dark:text-gray-300 text-sm">Top Star Badge</label><input type="text" id="edit-badge1" class="w-full input-glass p-2"></div>
+                            <div><label class="block font-semibold mb-2 text-gray-700 dark:text-gray-300 text-sm">Image Corner Badge</label><input type="text" id="edit-badge2" class="w-full input-glass p-2"></div>
+                            <div><label class="block font-semibold mb-2 text-gray-700 dark:text-gray-300 text-sm">Main Button Text</label><input type="text" id="edit-btn-text" class="w-full input-glass p-2"></div>
                         </div>
                         <div>
                             <label class="block font-semibold mb-2 text-gray-700 dark:text-gray-300 text-sm">Hero Showcase Image (Upload Local File)</label>
-                            <input type="file" id="edit-home-img-file" accept="image/*" class="w-full input-glass p-2">
+                            <input type="file" id="edit-home-img-file" accept="image/*" class="w-full input-glass p-2 text-sm">
                         </div>
                     </div>
-
                     <div class="p-5 bg-slate-50/60 dark:bg-slate-900/40 border border-slate-200 dark:border-slate-800 rounded-xl mb-6 shadow-inner">
                         <h4 class="font-bold text-gray-800 dark:text-gray-200 border-b border-gray-200 dark:border-gray-700 pb-2 mb-4"><i class="fa-solid fa-heading"></i> Headers & Descriptions</h4>
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-5 mb-4">
-                            <div>
-                                <label class="block font-semibold mb-2 text-gray-700 dark:text-gray-300 text-sm">Top Title Line</label>
-                                <input type="text" id="edit-title1" class="w-full input-glass p-3">
-                            </div>
-                            <div>
-                                <label class="block font-semibold mb-2 text-gray-700 dark:text-gray-300 text-sm">Bottom Title Line (Colored)</label>
-                                <input type="text" id="edit-title2" class="w-full input-glass p-3">
-                            </div>
+                            <div><label class="block font-semibold mb-2 text-gray-700 dark:text-gray-300 text-sm">Top Title Line</label><input type="text" id="edit-title1" class="w-full input-glass p-3"></div>
+                            <div><label class="block font-semibold mb-2 text-gray-700 dark:text-gray-300 text-sm">Bottom Title Line (Colored)</label><input type="text" id="edit-title2" class="w-full input-glass p-3"></div>
                         </div>
                         <div class="mb-4">
                             <label class="block font-semibold mb-2 text-gray-700 dark:text-gray-300 text-sm">Paragraph Description</label>
                             <textarea id="edit-desc" rows="2" class="w-full input-glass p-3"></textarea>
                         </div>
                     </div>
-
                     <div class="p-5 bg-blue-50/60 dark:bg-blue-950/20 border border-blue-200 dark:border-blue-900 rounded-xl mb-8 shadow-inner">
                         <h4 class="font-bold text-blue-500 border-b border-blue-200 dark:border-blue-800 pb-2 mb-4"><i class="fa-solid fa-chart-simple"></i> System Metrics & Counters</h4>
                         <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
                             <div class="p-3 bg-white/40 dark:bg-slate-800/40 border border-white/60 dark:border-slate-700 rounded-xl">
                                 <span class="text-xs font-bold uppercase text-purple-500 mb-2 block">Stat Box 1</span>
-                                <input type="text" id="edit-stat1-title" placeholder="Value (10M+)" class="w-full input-glass p-2 mb-2 text-sm">
-                                <input type="text" id="edit-stat1-desc" placeholder="Label (Place Visits)" class="w-full input-glass p-2 text-sm">
+                                <input type="text" id="edit-stat1-title" class="w-full input-glass p-2 mb-2 text-sm"><input type="text" id="edit-stat1-desc" class="w-full input-glass p-2 text-sm">
                             </div>
                             <div class="p-3 bg-white/40 dark:bg-slate-800/40 border border-white/60 dark:border-slate-700 rounded-xl">
                                 <span class="text-xs font-bold uppercase text-blue-500 mb-2 block">Stat Box 2</span>
-                                <input type="text" id="edit-stat2-title" placeholder="Value (50K+)" class="w-full input-glass p-2 mb-2 text-sm">
-                                <input type="text" id="edit-stat2-desc" placeholder="Label (Active Players)" class="w-full input-glass p-2 text-sm">
+                                <input type="text" id="edit-stat2-title" class="w-full input-glass p-2 mb-2 text-sm"><input type="text" id="edit-stat2-desc" class="w-full input-glass p-2 text-sm">
                             </div>
                             <div class="p-3 bg-white/40 dark:bg-slate-800/40 border border-white/60 dark:border-slate-700 rounded-xl">
                                 <span class="text-xs font-bold uppercase text-green-500 mb-2 block">Stat Box 3</span>
-                                <input type="text" id="edit-stat3-title" placeholder="Value (1,200+)" class="w-full input-glass p-2 mb-2 text-sm">
-                                <input type="text" id="edit-stat3-desc" placeholder="Label (Lua Scripts)" class="w-full input-glass p-2 text-sm">
+                                <input type="text" id="edit-stat3-title" class="w-full input-glass p-2 mb-2 text-sm"><input type="text" id="edit-stat3-desc" class="w-full input-glass p-2 text-sm">
                             </div>
                             <div class="p-3 bg-white/40 dark:bg-slate-800/40 border border-white/60 dark:border-slate-700 rounded-xl">
                                 <span class="text-xs font-bold uppercase text-red-500 mb-2 block">Stat Box 4</span>
-                                <input type="text" id="edit-stat4-title" placeholder="Value (200K+)" class="w-full input-glass p-2 mb-2 text-sm">
-                                <input type="text" id="edit-stat4-desc" placeholder="Label (Subscribers)" class="w-full input-glass p-2 text-sm">
+                                <input type="text" id="edit-stat4-title" class="w-full input-glass p-2 mb-2 text-sm"><input type="text" id="edit-stat4-desc" class="w-full input-glass p-2 text-sm">
                             </div>
                         </div>
                     </div>
-
-                    <button type="submit" class="w-full btn-cartoon bg-brand-primary hover:bg-brand-primaryHover py-3 text-lg">
-                        <i class="fa-solid fa-floppy-disk mr-2"></i> Save Home Page!
-                    </button>
+                    <button type="submit" class="w-full btn-cartoon bg-brand-primary hover:bg-brand-primaryHover py-3 text-lg">Save Home Page!</button>
                 </form>
             </div>
 
-            <!-- Edit Profile & About Section -->
             <div id="admin-edit-profile-section" class="hidden glass-card p-8 pop-in">
                 <h2 class="text-2xl font-bold text-gray-900 dark:text-white mb-2 flex items-center gap-3">
-                    <div class="bg-amber-100/50 dark:bg-amber-950/40 p-2 rounded-lg border border-amber-200 text-amber-500 shadow-sm"><i class="fa-solid fa-id-card"></i></div> Edit Profile & About Info
+                    <div class="bg-amber-100/50 dark:bg-amber-950/40 p-2 rounded-lg border border-amber-200 text-amber-500 shadow-sm"><i class="fa-solid fa-id-card"></i></div> Edit Global Profile Info
                 </h2>
-                <p class="text-gray-500 mb-6 text-sm">Update your basic details, About Me descriptions, and social URLs across the site.</p>
-
-                <form id="edit-profile-form" onsubmit="handleProfileEdit(event)">
+                <form id="edit-profile-form" onsubmit="handleProfileEdit(event)" class="mt-8">
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6 bg-white/40 dark:bg-slate-800/40 p-6 rounded-2xl border border-white/60 dark:border-slate-700 mb-6">
-                        <div>
-                            <label class="block font-semibold mb-2 text-gray-700 dark:text-gray-300 text-sm">Display Name</label>
-                            <input type="text" id="edit-profile-name" class="w-full input-glass p-3">
-                        </div>
-                        <div>
-                            <label class="block font-semibold mb-2 text-gray-700 dark:text-gray-300 text-sm">Profile Logo (Upload Local Image)</label>
-                            <input type="file" id="edit-profile-logo-file" accept="image/*" class="w-full input-glass p-2 text-sm">
-                        </div>
-                        <div>
-                            <label class="block font-semibold mb-2 text-gray-700 dark:text-gray-300 text-sm">Age</label>
-                            <input type="number" id="edit-profile-age" class="w-full input-glass p-3">
-                        </div>
-                        <div>
-                            <label class="block font-semibold mb-2 text-gray-700 dark:text-gray-300 text-sm">Email Address</label>
-                            <input type="email" id="edit-profile-email" class="w-full input-glass p-3">
-                        </div>
+                        <div><label class="block font-semibold mb-2 text-gray-700 dark:text-gray-300 text-sm">Display Name</label><input type="text" id="edit-profile-name" class="w-full input-glass p-3"></div>
+                        <div><label class="block font-semibold mb-2 text-gray-700 dark:text-gray-300 text-sm">Profile Logo (Upload Local)</label><input type="file" id="edit-profile-logo-file" accept="image/*" class="w-full input-glass p-2 text-sm"></div>
+                        <div><label class="block font-semibold mb-2 text-gray-700 dark:text-gray-300 text-sm">Age</label><input type="number" id="edit-profile-age" class="w-full input-glass p-3"></div>
+                        <div><label class="block font-semibold mb-2 text-gray-700 dark:text-gray-300 text-sm">Email Address</label><input type="email" id="edit-profile-email" class="w-full input-glass p-3"></div>
                     </div>
-
                     <div class="bg-white/40 dark:bg-slate-800/40 p-6 rounded-2xl border border-white/60 dark:border-slate-700 mb-6 space-y-5">
-                        <div>
-                            <label class="block font-semibold mb-2 text-gray-700 dark:text-gray-300 text-sm">About Me Description</label>
-                            <textarea id="edit-profile-desc" rows="3" class="w-full input-glass p-3 resize-none"></textarea>
-                        </div>
-                        <div>
-                            <label class="block font-semibold mb-2 text-brand-primary text-sm">Highlighted Inspired Line</label>
-                            <input type="text" id="edit-profile-inspired" class="w-full input-glass p-3">
-                        </div>
+                        <div><label class="block font-semibold mb-2 text-gray-700 dark:text-gray-300 text-sm">About Me Description</label><textarea id="edit-profile-desc" rows="3" class="w-full input-glass p-3 resize-none"></textarea></div>
+                        <div><label class="block font-semibold mb-2 text-brand-primary text-sm">Highlighted Inspired Line</label><input type="text" id="edit-profile-inspired" class="w-full input-glass p-3"></div>
                     </div>
-
                     <div class="grid grid-cols-1 md:grid-cols-3 gap-4 bg-white/40 dark:bg-slate-800/40 p-6 rounded-2xl border border-white/60 dark:border-slate-700 mb-8">
-                        <div>
-                            <label class="block font-semibold mb-2 text-[#5865F2] text-sm"><i class="fa-brands fa-discord"></i> Discord URL</label>
-                            <input type="url" id="edit-profile-discord" class="w-full input-glass p-3">
-                        </div>
-                        <div>
-                            <label class="block font-semibold mb-2 text-[#FF0000] text-sm"><i class="fa-brands fa-youtube"></i> YouTube URL</label>
-                            <input type="url" id="edit-profile-youtube" class="w-full input-glass p-3">
-                        </div>
-                        <div>
-                            <label class="block font-semibold mb-2 text-green-500 text-sm"><i class="fa-solid fa-headset"></i> Support URL</label>
-                            <input type="url" id="edit-profile-support" class="w-full input-glass p-3">
-                        </div>
+                        <div><label class="block font-semibold mb-2 text-[#5865F2] text-sm"><i class="fa-brands fa-discord"></i> Discord URL</label><input type="url" id="edit-profile-discord" class="w-full input-glass p-3"></div>
+                        <div><label class="block font-semibold mb-2 text-[#FF0000] text-sm"><i class="fa-brands fa-youtube"></i> YouTube URL</label><input type="url" id="edit-profile-youtube" class="w-full input-glass p-3"></div>
+                        <div><label class="block font-semibold mb-2 text-green-500 text-sm"><i class="fa-solid fa-headset"></i> Support URL</label><input type="url" id="edit-profile-support" class="w-full input-glass p-3"></div>
                     </div>
-
-                    <button type="submit" class="w-full btn-cartoon bg-amber-500 hover:bg-amber-400 py-3 text-lg">
-                        <i class="fa-solid fa-floppy-disk mr-2"></i> Save Profile Settings!
-                    </button>
+                    <button type="submit" class="w-full btn-cartoon bg-amber-500 hover:bg-amber-400 py-3 text-lg">Save Profile Settings!</button>
                 </form>
             </div>
 
-            <!-- Inbox Section -->
             <div id="admin-inbox-section" class="hidden glass-card p-8 pop-in">
                 <div class="flex justify-between items-center mb-6 border-b border-gray-200 dark:border-gray-700 pb-4">
                     <h2 class="text-2xl font-bold text-gray-900 dark:text-white flex items-center gap-3">
@@ -705,16 +622,12 @@
                         <i class="fa-solid fa-trash-can"></i> Delete All
                     </button>
                 </div>
-                
-                <div id="admin-messages-container" class="space-y-5">
-                    <p class="font-medium text-gray-500 text-center py-8">Inbox is empty!</p>
-                </div>
+                <div id="admin-messages-container" class="space-y-5"></div>
             </div>
         </section>
 
     </main>
 
-    <!-- Asset Fullscreen Modal -->
     <div id="fullscreen-overlay" class="fixed inset-0 bg-black/90 backdrop-blur-md hidden z-[200] flex flex-col justify-center items-center p-4 sm:p-6" onclick="closeAssetView()">
         <div class="bg-white dark:bg-[#111827] w-full max-w-4xl h-full max-h-[90vh] rounded-2xl shadow-2xl overflow-y-auto no-scrollbar relative flex flex-col border border-gray-200 dark:border-gray-700 pop-in" onclick="event.stopPropagation()">
             <button onclick="closeAssetView()" class="absolute top-4 right-4 text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white transition text-2xl z-10 w-10 h-10 bg-white/50 dark:bg-slate-800/80 rounded-full flex items-center justify-center backdrop-blur-sm"><i class="fa-solid fa-xmark"></i></button>
@@ -722,7 +635,7 @@
             <div class="p-6 sm:p-10">
                 <div class="flex flex-col items-center border-b border-gray-200 dark:border-gray-700 pb-8 mb-8">
                     <span id="fullscreen-category" class="px-3 py-1 bg-brand-primary/10 text-brand-primary border border-brand-primary/20 rounded-full text-xs font-bold uppercase tracking-wider mb-4">Category</span>
-                    <img id="fullscreen-image" src="" alt="Fullscreen asset preview" class="w-full max-h-[50vh] rounded-xl object-cover shadow-lg mb-6 bg-gray-100 dark:bg-black/50">
+                    <img id="fullscreen-image" src="" alt="Asset preview" class="w-full max-h-[50vh] rounded-xl object-cover shadow-lg mb-6 bg-gray-100 dark:bg-black/50">
                     <div class="text-center w-full">
                         <h3 id="fullscreen-title" class="text-3xl font-cartoon font-bold text-gray-900 dark:text-white mb-3">Asset Title</h3>
                         <p id="fullscreen-desc" class="text-gray-600 dark:text-gray-300 font-medium text-lg leading-relaxed max-w-2xl mx-auto">Asset Description Context</p>
@@ -730,74 +643,61 @@
                 </div>
                 
                 <div>
-                    <h3 class="text-2xl font-bold text-gray-900 dark:text-white mb-2 flex items-center gap-2">
-                        <i class="fa-solid fa-comments text-brand-primary"></i> Experience Reviews
-                    </h3>
-                    <p class="text-gray-500 dark:text-gray-400 mb-6 text-sm">See what other developers think or share your execution feedback for this specific asset.</p>
-
+                    <h3 class="text-2xl font-bold text-gray-900 dark:text-white mb-2 flex items-center gap-2"><i class="fa-solid fa-comments text-brand-primary"></i> Experience Reviews</h3>
                     <div id="review-auth-block" class="mb-8 p-4 bg-amber-50 dark:bg-amber-950/30 border border-amber-200 dark:border-amber-900 rounded-xl text-amber-800 dark:text-amber-300 font-medium text-sm flex items-center gap-3">
                         <i class="fa-solid fa-lock text-base animate-bounce"></i> You must be logged into your account to submit asset reviews.
                     </div>
-
                     <form id="review-form" class="hidden space-y-4 mb-8 bg-gray-50 dark:bg-slate-800/50 p-5 rounded-xl border border-gray-100 dark:border-gray-700" onsubmit="handleReviewSubmit(event)">
-                        <div>
-                            <label class="block font-semibold mb-2 text-sm text-gray-700 dark:text-gray-300">Your Feedback</label>
-                            <textarea id="review-text" rows="3" placeholder="Write your testing experience here..." class="w-full input-glass p-4" required></textarea>
-                        </div>
+                        <textarea id="review-text" rows="3" placeholder="Write your testing experience here..." class="w-full input-glass p-4" required></textarea>
                         <button type="submit" class="btn-cartoon px-6 py-2 text-sm"><i class="fa-solid fa-paper-plane mr-1"></i> Post Review</button>
                     </form>
-
                     <div id="reviews-display-stack" class="space-y-4 pt-2"></div>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- Toast Component -->
-    <div id="toast" class="fixed bottom-10 right-10 px-5 py-3 rounded-xl shadow-lg font-semibold flex items-center gap-3 z-[300] border border-white/50 bg-white/80 text-gray-900">
-        <i id="toast-icon" class="fa-solid text-xl"></i>
-        <span id="toast-msg">Notification</span>
+    <div id="user-edit-modal" class="fixed inset-0 bg-gray-900/80 backdrop-blur-sm hidden z-[110] flex items-center justify-center p-4">
+        <div class="glass-card p-8 w-full max-w-md relative pop-in max-h-[90vh] overflow-y-auto no-scrollbar">
+            <button onclick="closeUserEditModal()" class="absolute top-4 right-4 text-gray-400 hover:text-gray-900 dark:hover:text-white transition text-xl bg-white/50 dark:bg-slate-800 w-8 h-8 rounded-full flex items-center justify-center"><i class="fa-solid fa-xmark"></i></button>
+            <h2 class="text-2xl font-bold mb-6 text-center text-gray-900 dark:text-white font-cartoon">Edit Personal Account</h2>
+            <form id="user-edit-form" onsubmit="handleUserEditSubmit(event)">
+                <div class="space-y-4 mb-6">
+                    <div><label class="block font-semibold text-sm mb-1 text-gray-700 dark:text-gray-300">Profile Picture (Local File)</label><input type="file" id="user-edit-pic" accept="image/*" class="w-full input-glass p-2 text-sm"></div>
+                    <div><label class="block font-semibold text-sm mb-1 text-gray-700 dark:text-gray-300">Display Name</label><input type="text" id="user-edit-name" class="w-full input-glass p-3" required></div>
+                    <div><label class="block font-semibold text-sm mb-1 text-gray-700 dark:text-gray-300">Age</label><input type="number" id="user-edit-age" class="w-full input-glass p-3"></div>
+                    <div><label class="block font-semibold text-sm mb-1 text-gray-700 dark:text-gray-300">Email Address</label><input type="email" id="user-edit-email" class="w-full input-glass p-3"></div>
+                </div>
+                <button type="submit" class="w-full btn-cartoon py-3 text-lg mb-4">Save Changes</button>
+            </form>
+        </div>
     </div>
 
-    <!-- Auth Modal with QoL Password Visibility View Toggle -->
+    <div id="toast" class="fixed bottom-10 right-10 px-5 py-3 rounded-xl shadow-lg font-semibold flex items-center gap-3 z-[400] border border-white/50 bg-white/80 text-gray-900 pointer-events-none">
+        <i id="toast-icon" class="fa-solid text-xl"></i><span id="toast-msg">Notification</span>
+    </div>
+
     <div id="auth-modal" class="fixed inset-0 bg-gray-900/80 backdrop-blur-sm hidden z-[100] flex items-center justify-center p-4">
         <div class="glass-card p-8 w-full max-w-md relative pop-in max-h-[90vh] overflow-y-auto no-scrollbar">
             <button onclick="document.getElementById('auth-modal').classList.add('hidden')" class="absolute top-4 right-4 text-gray-400 hover:text-gray-900 dark:hover:text-white transition text-xl bg-white/50 dark:bg-slate-800 w-8 h-8 rounded-full flex items-center justify-center"><i class="fa-solid fa-xmark"></i></button>
             <h2 id="auth-title" class="text-2xl font-bold mb-6 text-center text-gray-900 dark:text-white">Login</h2>
             <form id="login-form" onsubmit="handleLogin(event)">
                 <div id="standard-fields" class="hidden space-y-3 mb-4 p-4 bg-white/40 dark:bg-slate-800/40 rounded-xl border border-white/60 dark:border-slate-700">
-                    <div>
-                        <label class="block font-semibold text-sm mb-1 text-gray-700 dark:text-gray-300">Display Name</label>
-                        <input type="text" id="reg-first" placeholder="Your Name" class="w-full input-glass p-3">
-                    </div>
-                    <div>
-                        <label class="block font-semibold text-sm mb-1 text-gray-700 dark:text-gray-300">Your Age</label>
-                        <input type="number" id="reg-age" placeholder="e.g. 15" min="1" class="w-full input-glass p-3">
-                    </div>
-                    <div>
-                        <label class="block font-semibold text-sm mb-1 text-gray-700 dark:text-gray-300">Profile Picture</label>
-                        <input type="file" id="reg-pic-file" accept="image/*" class="w-full input-glass p-2 text-sm">
-                    </div>
+                    <div><label class="block font-semibold text-sm mb-1 text-gray-700 dark:text-gray-300">Display Name</label><input type="text" id="reg-first" placeholder="Your Name" class="w-full input-glass p-3"></div>
+                    <div><label class="block font-semibold text-sm mb-1 text-gray-700 dark:text-gray-300">Your Age</label><input type="number" id="reg-age" placeholder="e.g. 15" min="1" class="w-full input-glass p-3"></div>
+                    <div><label class="block font-semibold text-sm mb-1 text-gray-700 dark:text-gray-300">Profile Picture</label><input type="file" id="reg-pic-file" accept="image/*" class="w-full input-glass p-2 text-sm"></div>
                 </div>
-
                 <div class="space-y-3 mb-6">
-                    <div>
-                        <label class="block font-semibold text-sm mb-1 text-gray-700 dark:text-gray-300">Username</label>
-                        <input type="text" id="auth-user" placeholder="Enter username" class="w-full input-glass p-3" required>
-                    </div>
+                    <div><label class="block font-semibold text-sm mb-1 text-gray-700 dark:text-gray-300">Username</label><input type="text" id="auth-user" placeholder="Enter username" class="w-full input-glass p-3" required></div>
                     <div>
                         <label class="block font-semibold text-sm mb-1 text-gray-700 dark:text-gray-300">Password</label>
                         <div class="relative">
                             <input type="password" id="auth-pass" placeholder="Enter password" class="w-full input-glass p-3 pr-10" required>
-                            <button type="button" onclick="togglePasswordReveal('auth-pass', 'pass-eye-icon')" class="absolute right-3 top-3.5 text-gray-400 hover:text-brand-primary transition">
-                                <i id="pass-eye-icon" class="fa-solid fa-eye"></i>
-                            </button>
+                            <button type="button" onclick="togglePasswordReveal('auth-pass', 'pass-eye-icon')" class="absolute right-3 top-3.5 text-gray-400 hover:text-brand-primary transition"><i id="pass-eye-icon" class="fa-solid fa-eye"></i></button>
                         </div>
                     </div>
                 </div>
-                
                 <button type="submit" id="auth-btn" class="w-full btn-cartoon py-3 text-lg mb-4">Login</button>
-                
                 <div class="flex justify-between font-medium text-sm text-gray-600 dark:text-gray-400 px-1">
                     <span onclick="toggleReg()" id="toggle-reg-text" class="hover:text-brand-primary cursor-pointer transition font-bold text-brand-primary">Create new account</span>
                     <span onclick="showToast('Ask the admin on Discord!', 'error')" class="hover:text-brand-primary cursor-pointer transition">Forgot?</span>
@@ -806,42 +706,18 @@
         </div>
     </div>
 
-    <!-- User Account Edit Modal -->
-    <div id="user-edit-modal" class="fixed inset-0 bg-gray-900/80 backdrop-blur-sm hidden z-[100] flex items-center justify-center p-4">
-        <div class="glass-card p-8 w-full max-w-md relative pop-in max-h-[90vh] overflow-y-auto no-scrollbar">
-            <button onclick="closeUserEditModal()" class="absolute top-4 right-4 text-gray-400 hover:text-gray-900 dark:hover:text-white transition text-xl bg-white/50 dark:bg-slate-800 w-8 h-8 rounded-full flex items-center justify-center"><i class="fa-solid fa-xmark"></i></button>
-            <h2 class="text-2xl font-bold mb-6 text-center text-gray-900 dark:text-white">Edit Account Info</h2>
-            <form id="user-edit-form" onsubmit="handleUserEditSubmit(event)">
-                <div class="space-y-4 mb-6">
-                    <div>
-                        <label class="block font-semibold text-sm mb-1 text-gray-700 dark:text-gray-300">Profile Picture (Local File)</label>
-                        <input type="file" id="user-edit-pic" accept="image/*" class="w-full input-glass p-2 text-sm">
-                    </div>
-                    <div>
-                        <label class="block font-semibold text-sm mb-1 text-gray-700 dark:text-gray-300">Display Name</label>
-                        <input type="text" id="user-edit-name" class="w-full input-glass p-3" required>
-                    </div>
-                    <div>
-                        <label class="block font-semibold text-sm mb-1 text-gray-700 dark:text-gray-300">Age</label>
-                        <input type="number" id="user-edit-age" class="w-full input-glass p-3">
-                    </div>
-                    <div>
-                        <label class="block font-semibold text-sm mb-1 text-gray-700 dark:text-gray-300">Email Address</label>
-                        <input type="email" id="user-edit-email" class="w-full input-glass p-3">
-                    </div>
-                </div>
-                <button type="submit" class="w-full btn-cartoon py-3 text-lg mb-4">Save Changes</button>
-            </form>
-        </div>
-    </div>
-
-    <!-- Back to Top Smooth Button Widget -->
     <button id="btn-back-to-top" onclick="scrollToTop()" class="btn-cartoon w-12 h-12 flex items-center justify-center shadow-lg transform hover:-translate-y-1 transition" title="Back to Top">
         <i class="fa-solid fa-arrow-up text-lg"></i>
     </button>
 
-    <!-- Scripts -->
     <script>
+        // ==========================================
+        // SUPABASE BACKEND INTEGRATION
+        // ==========================================
+        const SUPABASE_URL = 'https://ngoywknktovkkhewsbos.supabase.co'; 
+        const SUPABASE_ANON_KEY = 'sb_publishable_70BhPk6LVvMIaKAda72m5w_ygs3bCqQ';
+        const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
         const fallbackMainLogo = "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=150";
 
         let siteData = {
@@ -854,7 +730,7 @@
                 inspired: "Innovation isn't just simulated, it's executed flawlessly.",
                 discord: "https://discord.com/invite/8BGb8jFKn7",
                 youtube: "https://youtube.com/@agentsimulator?si=l5pJIzSEy23vAitT",
-                support: "#"
+                support: "https://discord.com/invite/8BGb8jFKn7"
             },
             homeSettings: {
                 badge1: 'Developer Hub',
@@ -881,14 +757,13 @@
         let isRegistering = false;
         let currentCategoryFilter = 'All';
         let currentlyViewedAsset = ''; 
+        let toastTimeout;
 
-        // Quality of Life: Character Count Handler
         function updateCharCounter(fieldId, counterId, maxLength) {
             const currentLength = document.getElementById(fieldId).value.length;
             document.getElementById(counterId).innerText = `${currentLength} / ${maxLength}`;
         }
 
-        // Quality of Life: Password Mask Reveal Control Toggle
         function togglePasswordReveal(inputId, iconId) {
             const passwordInput = document.getElementById(inputId);
             const eyeIcon = document.getElementById(iconId);
@@ -901,37 +776,92 @@
             }
         }
 
-        // Quality of Life: Back To Top Tracker Monitor Logic
         window.addEventListener('scroll', () => {
             const topBtn = document.getElementById('btn-back-to-top');
-            if (window.scrollY > 400) {
-                topBtn.classList.add('visible');
-            } else {
-                topBtn.classList.remove('visible');
-            }
+            if (window.scrollY > 400) { topBtn.classList.add('visible'); } 
+            else { topBtn.classList.remove('visible'); }
         });
 
-        function scrollToTop() {
-            window.scrollTo({ top: 0, behavior: 'smooth' });
+        function scrollToTop() { window.scrollTo({ top: 0, behavior: 'smooth' }); }
+
+        function showToast(message, type = 'success') {
+            const toast = document.getElementById('toast');
+            document.getElementById('toast-msg').innerText = message;
+            if (type === 'success') {
+                toast.className = 'fixed bottom-10 right-10 px-5 py-3 rounded-xl shadow-lg font-semibold flex items-center gap-3 z-[400] bg-green-50/90 border border-green-200 text-green-800 backdrop-blur-md show';
+                document.getElementById('toast-icon').className = 'fa-solid fa-circle-check text-green-500 text-xl';
+            } else {
+                toast.className = 'fixed bottom-10 right-10 px-5 py-3 rounded-xl shadow-lg font-semibold flex items-center gap-3 z-[400] bg-red-50/90 border border-red-200 text-red-800 backdrop-blur-md show';
+                document.getElementById('toast-icon').className = 'fa-solid fa-triangle-exclamation text-red-500 text-xl';
+            }
+            if(toastTimeout) clearTimeout(toastTimeout);
+            toastTimeout = setTimeout(() => { toast.classList.remove('show'); }, 3500);
         }
 
-        function loadSiteData() {
+        function safeSetLocal(key, value) {
+            try {
+                localStorage.setItem(key, value);
+            } catch (e) {
+                if (e.name === 'QuotaExceededError' || e.name === 'NS_ERROR_DOM_QUOTA_REACHED') {
+                    showToast('Storage full! The uploaded file is too large.', 'error');
+                } else {
+                    console.error('Local storage error:', e);
+                }
+            }
+        }
+
+        async function loadSiteData() {
+            // First load from local storage to keep UI fast
             const savedData = localStorage.getItem('agentSimSiteData');
             if(savedData) {
                 try {
                     const parsed = JSON.parse(savedData);
                     if(parsed && parsed.homeSettings) siteData = {...siteData, ...parsed};
-                } catch(e) { console.error("Error loading layout configs:", e); }
+                } catch(e) { console.error("Error loading local configs:", e); }
             }
             
             const savedUsers = localStorage.getItem('agentSimRegisteredUsers');
             if(savedUsers) {
-                try { registeredUsers = JSON.parse(savedUsers); } catch(e) { console.error(e); }
+                try { registeredUsers = JSON.parse(savedUsers); } catch(e) {}
+            }
+
+            // Attempt to pull latest state from Supabase
+            try {
+                const { data, error } = await supabase.from('app_storage').select('key, value');
+                if (data && !error) {
+                    data.forEach(row => {
+                        if (row.key === 'siteData') {
+                            siteData = {...siteData, ...row.value};
+                            safeSetLocal('agentSimSiteData', JSON.stringify(siteData));
+                        }
+                        if (row.key === 'registeredUsers') {
+                            registeredUsers = row.value;
+                            safeSetLocal('agentSimRegisteredUsers', JSON.stringify(registeredUsers));
+                        }
+                    });
+                    renderData(); 
+                    populateHomeEditorFields();
+                    populateProfileEditorFields();
+                }
+            } catch (err) {
+                console.warn('Supabase DB not found or missing "app_storage" table. Using Local Storage only.', err);
             }
         }
         
-        function saveSiteData() {
-            localStorage.setItem('agentSimSiteData', JSON.stringify(siteData));
+        async function saveSiteData() {
+            safeSetLocal('agentSimSiteData', JSON.stringify(siteData));
+            try {
+                await supabase.from('app_storage').upsert({ key: 'siteData', value: siteData }, { onConflict: 'key' });
+            } catch (e) {
+                console.warn('Supabase saving disabled. Data cached to local storage only.');
+            }
+        }
+
+        async function saveRegisteredUsers() {
+            safeSetLocal('agentSimRegisteredUsers', JSON.stringify(registeredUsers));
+            try {
+                await supabase.from('app_storage').upsert({ key: 'registeredUsers', value: registeredUsers }, { onConflict: 'key' });
+            } catch (e) {}
         }
 
         window.onload = () => {
@@ -953,9 +883,9 @@
                         document.getElementById('nav-admin').classList.remove('hidden');
                         document.getElementById('nav-admin-mobile').classList.remove('hidden');
                     }
-                    updateUserUI();
                 } catch(e) { currentUser = null; }
             }
+            updateUserUI();
             renderData();
             populateHomeEditorFields();
             populateProfileEditorFields();
@@ -990,27 +920,12 @@
             }
         }
 
-        function showToast(message, type = 'success') {
-            const toast = document.getElementById('toast');
-            document.getElementById('toast-msg').innerText = message;
-            
-            if (type === 'success') {
-                toast.className = 'fixed bottom-10 right-10 px-5 py-3 rounded-xl shadow-lg font-semibold flex items-center gap-3 z-[300] bg-green-50/90 border border-green-200 text-green-800 backdrop-blur-md show';
-                document.getElementById('toast-icon').className = 'fa-solid fa-circle-check text-green-500 text-xl';
-            } else {
-                toast.className = 'fixed bottom-10 right-10 px-5 py-3 rounded-xl shadow-lg font-semibold flex items-center gap-3 z-[300] bg-red-50/90 border border-red-200 text-red-800 backdrop-blur-md show';
-                document.getElementById('toast-icon').className = 'fa-solid fa-triangle-exclamation text-red-500 text-xl';
-            }
-            setTimeout(() => { toast.classList.remove('show'); }, 3500);
-        }
-
         function switchTab(tabId) {
             document.querySelectorAll('.tab-content').forEach(tab => {
                 tab.classList.add('hidden');
                 tab.classList.remove('opacity-100');
                 tab.classList.add('opacity-0');
             });
-            
             const targetedTab = document.getElementById(tabId);
             if(targetedTab) {
                 targetedTab.classList.remove('hidden');
@@ -1019,11 +934,11 @@
                     targetedTab.classList.add('opacity-100');
                 }, 50);
             }
-            
-            // QoL Tab Line Highlight Transitions
             document.querySelectorAll('.nav-btn').forEach(btn => {
-                btn.classList.remove('active-tab', 'text-black', 'dark:text-white');
-                btn.classList.add('text-gray-600', 'dark:text-gray-300');
+                if(!btn.id || !btn.id.includes('nav-admin')) {
+                    btn.classList.remove('active-tab', 'text-black', 'dark:text-white');
+                    btn.classList.add('text-gray-600', 'dark:text-gray-300');
+                }
             });
             const activeNav = document.querySelector(`.nav-btn[data-target="${tabId}"]`);
             if(activeNav) {
@@ -1051,13 +966,12 @@
                 if (exists) { showToast('Username taken!', 'error'); return; }
                 const first = document.getElementById('reg-first').value || user;
                 const age = document.getElementById('reg-age').value || 'Unknown';
-                
                 const fileInput = document.getElementById('reg-pic-file');
                 
                 const proceedRegistration = (avatarData) => {
                     const newUser = { role: 'user', name: first, username: user, password: pass, img: avatarData, age: age, email: '' };
                     registeredUsers.push(newUser);
-                    localStorage.setItem('agentSimRegisteredUsers', JSON.stringify(registeredUsers));
+                    saveRegisteredUsers(); 
                     currentUser = newUser;
                     finalizeLoginSequence(first);
                 };
@@ -1071,7 +985,7 @@
                 }
             } else {
                 if (user === 'Agent' && pass === 'AgentisAdmin') {
-                    currentUser = { role: 'admin', name: 'Admin', img: fallbackMainLogo };
+                    currentUser = { role: 'admin', name: 'Admin', username: 'Agent', img: fallbackMainLogo, age: '30', email: 'admin@agentsimulator.com' };
                     document.getElementById('nav-admin').classList.remove('hidden');
                     document.getElementById('nav-admin-mobile').classList.remove('hidden');
                     finalizeLoginSequence('Admin');
@@ -1088,14 +1002,23 @@
         }
 
         function finalizeLoginSequence(name) {
-            localStorage.setItem('agentSimUser', JSON.stringify(currentUser));
+            safeSetLocal('agentSimUser', JSON.stringify(currentUser));
             document.getElementById('auth-modal').classList.add('hidden');
             document.getElementById('login-form').reset();
             showToast(`Welcome ${name}!`, 'success');
             updateUserUI();
             renderData();
         }
-        
+
+        function toggleProfileMenu(e) {
+            e.stopPropagation();
+            document.getElementById('profile-dropdown').classList.toggle('hidden');
+        }
+
+        window.addEventListener('click', () => {
+            document.getElementById('profile-dropdown').classList.add('hidden');
+        });
+
         function openUserEditModal() {
             if(!currentUser) return;
             document.getElementById('user-edit-name').value = currentUser.name || '';
@@ -1105,14 +1028,11 @@
             document.getElementById('profile-dropdown').classList.add('hidden');
         }
 
-        function closeUserEditModal() {
-            document.getElementById('user-edit-modal').classList.add('hidden');
-        }
+        function closeUserEditModal() { document.getElementById('user-edit-modal').classList.add('hidden'); }
 
         function handleUserEditSubmit(e) {
             e.preventDefault();
             if(!currentUser) return;
-            
             const newName = document.getElementById('user-edit-name').value;
             const newAge = document.getElementById('user-edit-age').value;
             const newEmail = document.getElementById('user-edit-email').value;
@@ -1128,11 +1048,11 @@
                     const userIndex = registeredUsers.findIndex(u => u.username === currentUser.username);
                     if(userIndex !== -1) {
                         registeredUsers[userIndex] = currentUser;
-                        localStorage.setItem('agentSimRegisteredUsers', JSON.stringify(registeredUsers));
+                        saveRegisteredUsers(); 
                     }
                 }
                 
-                localStorage.setItem('agentSimUser', JSON.stringify(currentUser));
+                safeSetLocal('agentSimUser', JSON.stringify(currentUser));
                 updateUserUI();
                 closeUserEditModal();
                 showToast('Account Info Updated!', 'success');
@@ -1147,25 +1067,20 @@
             }
         }
 
-        function toggleProfileMenu(e) {
-            e.stopPropagation();
-            document.getElementById('profile-dropdown').classList.toggle('hidden');
-        }
-
-        window.addEventListener('click', () => {
-            document.getElementById('profile-dropdown').classList.add('hidden');
-        });
-
         function updateUserUI() {
             if(!currentUser) return;
             const contentStructure = `
-                <div onclick="toggleProfileMenu(event)" class="flex items-center gap-3 bg-white/40 dark:bg-slate-800/40 backdrop-blur-md border border-white/60 dark:border-slate-700 shadow-sm px-4 py-2 rounded-2xl hover-pop cursor-pointer pop-in select-none">
-                    <img src="${currentUser.img || fallbackMainLogo}" class="w-10 h-10 rounded-full object-cover border-2 border-white dark:border-slate-600 shadow-sm">
-                    <div class="flex flex-col text-left">
-                        <span class="font-bold text-sm text-gray-900 dark:text-white leading-tight">${currentUser.name}</span>
-                        ${currentUser.age ? `<span class="text-xs font-medium text-gray-500 dark:text-gray-400 leading-tight">Age: ${currentUser.age}</span>` : ''}
+                <div class="flex items-center gap-2 select-none w-full md:w-auto">
+                    <div onclick="toggleProfileMenu(event)" class="w-full flex items-center justify-between gap-3 bg-white/40 dark:bg-slate-800/40 backdrop-blur-md border border-white/60 dark:border-slate-700 shadow-sm px-4 py-2 rounded-2xl hover-pop cursor-pointer pop-in">
+                        <div class="flex items-center gap-3">
+                            <img src="${currentUser.img || fallbackMainLogo}" class="w-10 h-10 rounded-full object-cover border-2 border-white dark:border-slate-600 shadow-sm">
+                            <div class="flex flex-col text-left">
+                                <span class="font-bold text-sm text-gray-900 dark:text-white leading-tight">${currentUser.name}</span>
+                                ${currentUser.age ? `<span class="text-xs font-medium text-gray-500 dark:text-gray-400 leading-tight">Age: ${currentUser.age}</span>` : ''}
+                            </div>
+                        </div>
+                        <i class="fa-solid fa-chevron-down text-xs text-gray-400 ml-1"></i>
                     </div>
-                    <i class="fa-solid fa-chevron-down text-xs text-gray-400 ml-1"></i>
                 </div>
             `;
             document.getElementById('user-controls').innerHTML = contentStructure;
@@ -1184,7 +1099,7 @@
             switchTab('home');
             showToast('Logged out successfully.');
 
-            const standardButton = `<button onclick="document.getElementById('auth-modal').classList.remove('hidden')" class="w-full md:w-auto btn-cartoon px-6 py-2 pop-in">Login</button>`;
+            const standardButton = `<button onclick="document.getElementById('auth-modal').classList.remove('hidden')" class="w-full md:w-auto btn-cartoon px-6 py-2 pop-in">Login / Join</button>`;
             document.getElementById('user-controls').innerHTML = standardButton;
             document.getElementById('user-controls-mobile').innerHTML = standardButton;
 
@@ -1238,7 +1153,7 @@
         }
 
         function populateHomeEditorFields() {
-            const h = siteData.homeSettings;
+            const h = siteData.homeSettings || {};
             document.getElementById('edit-badge1').value = h.badge1 || '';
             document.getElementById('edit-title1').value = h.title1 || '';
             document.getElementById('edit-title2').value = h.title2 || '';
@@ -1257,7 +1172,7 @@
         }
 
         function populateProfileEditorFields() {
-            const p = siteData.profile;
+            const p = siteData.profile || {};
             document.getElementById('edit-profile-name').value = p.displayName || '';
             document.getElementById('edit-profile-age').value = p.age || '';
             document.getElementById('edit-profile-email').value = p.email || '';
@@ -1271,6 +1186,7 @@
         function handleProfileEdit(e) {
             e.preventDefault();
             const logoInput = document.getElementById('edit-profile-logo-file');
+            if (!siteData.profile) siteData.profile = {};
             
             const finalizeProfileSave = (logoBase64) => {
                 siteData.profile = {
@@ -1286,7 +1202,7 @@
                 };
                 saveSiteData();
                 renderData();
-                showToast('Profile Settings Updated!', 'success');
+                showToast('Global Profile Updated!', 'success');
             };
 
             if (logoInput.files && logoInput.files.length > 0) {
@@ -1301,6 +1217,7 @@
         function handleHomeEdit(e) {
             e.preventDefault();
             const fileInput = document.getElementById('edit-home-img-file');
+            if(!siteData.homeSettings) siteData.homeSettings = {};
             
             const finalizeHomeEdit = (imgData) => {
                 siteData.homeSettings = {
@@ -1337,6 +1254,7 @@
 
         function handleSupportMail(e) {
             e.preventDefault();
+            if(!siteData.messages) siteData.messages = [];
             siteData.messages.push({ 
                 name: document.getElementById('sup-name').value, 
                 email: document.getElementById('sup-email').value, 
@@ -1540,8 +1458,8 @@
 
         function renderData() {
             const isAdmin = currentUser && currentUser.role === 'admin';
-            const h = siteData.homeSettings;
-            const p = siteData.profile;
+            const h = siteData.homeSettings || {};
+            const p = siteData.profile || {};
 
             // Header Elements
             document.getElementById('nav-logo').src = p.logo || fallbackMainLogo;
@@ -1565,14 +1483,20 @@
                 document.getElementById('about-link-support').onclick = function(e){ e.preventDefault(); switchTab('support'); };
             }
 
-            // Home Editor Elements
+            // Home Elements
             document.getElementById('display-home-badge1').innerText = h.badge1 || '';
             document.getElementById('display-home-title1').innerText = h.title1 || '';
             document.getElementById('display-home-title2').innerText = h.title2 || '';
             document.getElementById('display-home-desc').innerText = h.desc || '';
             document.getElementById('display-home-btn').innerText = h.btnText || '';
             document.getElementById('display-home-badge2').innerText = h.badge2 || '';
-            document.getElementById('display-home-img').src = h.imgUrl || 'hero-showcase.png';
+            
+            const mainImg = document.getElementById('display-home-img');
+            mainImg.src = h.imgUrl || 'hero-showcase.png';
+            mainImg.onerror = function() { 
+                this.onerror=null; 
+                this.src='https://images.unsplash.com/photo-1605342417730-10ebcb1a1ab5?w=800&q=80'; 
+            };
 
             document.getElementById('display-stat1-title').innerText = h.stat1Title || '';
             document.getElementById('display-stat1-desc').innerText = h.stat1Desc || '';
