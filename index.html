@@ -8,6 +8,8 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght=400;500;600;700&family=Fredoka:wght=600;700&display=swap" rel="stylesheet">
     
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
     <script>
         tailwind.config = {
             darkMode: 'class',
@@ -59,7 +61,6 @@
             box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
         }
 
-        /* --- BUTTON EFFECT KEPT EXACTLY UNCHANGED --- */
         .btn-cartoon {
             background-color: #8B5CF6;
             color: #ffffff;
@@ -85,7 +86,6 @@
         .btn-cartoon:hover:not(:disabled) {
             background-color: #7C3AED;
         }
-        /* -------------------------------------------- */
 
         .input-glass {
             background: rgba(255, 255, 255, 0.7);
@@ -114,30 +114,16 @@
         .no-scrollbar::-webkit-scrollbar { display: none; }
         .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
 
-        /* UPGRADED HERO FLOATING EFFECT */
         @keyframes float {
-            0%, 100% { 
-                transform: translateY(0px) rotate(0deg); 
-                filter: drop-shadow(0 15px 20px rgba(139, 92, 246, 0.15));
-            }
-            50% { 
-                transform: translateY(-16px) rotate(1.5deg); 
-                filter: drop-shadow(0 30px 35px rgba(139, 92, 246, 0.35));
-            }
+            0%, 100% { transform: translateY(0px) rotate(0deg); filter: drop-shadow(0 15px 20px rgba(139, 92, 246, 0.15)); }
+            50% { transform: translateY(-16px) rotate(1.5deg); filter: drop-shadow(0 30px 35px rgba(139, 92, 246, 0.35)); }
         }
         .animate-float { animation: float 5s ease-in-out infinite; }
 
-        /* BACKDROP GLOW EFFECTS */
         .ambient-glow {
-            position: absolute;
-            width: 250px;
-            height: 250px;
+            position: absolute; width: 250px; height: 250px;
             background: radial-gradient(circle, rgba(139, 92, 246, 0.4) 0%, rgba(139, 92, 246, 0) 70%);
-            top: 20%;
-            right: 10%;
-            z-index: 0;
-            pointer-events: none;
-            filter: blur(40px);
+            top: 20%; right: 10%; z-index: 0; pointer-events: none; filter: blur(40px);
             animation: pulseGlow 8s ease-in-out infinite alternate;
         }
         @keyframes pulseGlow {
@@ -159,55 +145,26 @@
         html.dark .hover-pop:hover { box-shadow: 0 12px 40px rgba(0, 0, 0, 0.5); }
         .tab-content { transition: opacity 0.3s ease-in-out; }
 
-        .text-highlighter {
-            position: relative;
-            z-index: 1;
-            display: inline-block;
-        }
+        .text-highlighter { position: relative; z-index: 1; display: inline-block; }
         .text-highlighter::after {
-            content: '';
-            position: absolute;
-            bottom: 2px;
-            left: -2px;
-            right: -2px;
-            height: 40%;
-            background: rgba(139, 92, 246, 0.4);
-            z-index: -1;
-            transform: skewX(-15deg);
-            border-radius: 2px;
+            content: ''; position: absolute; bottom: 2px; left: -2px; right: -2px; height: 40%;
+            background: rgba(139, 92, 246, 0.4); z-index: -1; transform: skewX(-15deg); border-radius: 2px;
         }
 
         input[type="file"]::file-selector-button {
-            background-color: rgba(255, 255, 255, 0.8);
-            color: #111;
-            border: 1px solid rgba(0,0,0,0.1);
-            padding: 8px 16px;
-            border-radius: 8px;
-            cursor: pointer;
-            font-weight: 600;
-            margin-right: 10px;
-            transition: background 0.2s;
+            background-color: rgba(255, 255, 255, 0.8); color: #111; border: 1px solid rgba(0,0,0,0.1);
+            padding: 8px 16px; border-radius: 8px; cursor: pointer; font-weight: 600; margin-right: 10px; transition: background 0.2s;
         }
-        input[type="file"]::file-selector-button:hover {
-            background-color: rgba(255, 255, 255, 1);
-        }
-        html.dark input[type="file"]::file-selector-button {
-            background-color: #374151;
-            color: #fff;
-            border-color: rgba(255,255,255,0.1);
-        }
-        html.dark input[type="file"]::file-selector-button:hover {
-            background-color: #4b5563;
-        }
+        input[type="file"]::file-selector-button:hover { background-color: rgba(255, 255, 255, 1); }
+        html.dark input[type="file"]::file-selector-button { background-color: #374151; color: #fff; border-color: rgba(255,255,255,0.1); }
+        html.dark input[type="file"]::file-selector-button:hover { background-color: #4b5563; }
 
         #toast {
             transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), opacity 0.3s ease;
-            transform: translateY(100px) scale(0.9);
-            opacity: 0;
+            transform: translateY(100px) scale(0.9); opacity: 0;
         }
         #toast.show { transform: translateY(0) scale(1); opacity: 1; }
 
-        /* QoL Tab Active Line Animation */
         .nav-btn { position: relative; padding-bottom: 4px; }
         .nav-btn::after {
             content: ''; position: absolute; bottom: 0; left: 50%; width: 0; height: 3px;
@@ -215,7 +172,6 @@
         }
         .nav-btn.active-tab::after { width: 80%; }
 
-        /* Back to top button styling */
         #btn-back-to-top {
             position: fixed; bottom: 24px; right: 24px; z-index: 80; opacity: 0; transform: translateY(20px);
             transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); pointer-events: none;
@@ -225,7 +181,6 @@
 </head>
 <body class="min-h-screen flex flex-col relative dark:text-gray-100">
 
-    <!-- Ambient Visual Glow Component Behind Hero -->
     <div class="ambient-glow"></div>
 
     <nav class="sticky top-0 z-50 glass-card mx-4 mt-4 px-6 py-4 flex justify-between items-center shadow-lg">
@@ -234,7 +189,6 @@
             <span id="nav-display-name" class="text-2xl font-cartoon font-bold tracking-wide group-hover:text-brand-primary dark:text-white transition">Agent Simulator</span>
         </div>
         
-        <!-- Desktop Tabs -->
         <div class="hidden md:flex gap-6 font-semibold text-gray-600 dark:text-gray-300 text-lg items-center">
             <button onclick="switchTab('home')" class="nav-btn active-tab hover:text-black dark:hover:text-white transition text-black dark:text-white" data-target="home">Home</button>
             <button onclick="switchTab('studio-assets')" class="nav-btn hover:text-black dark:hover:text-white transition" data-target="studio-assets">Studio Assets</button>
@@ -254,7 +208,6 @@
             <div id="user-controls" class="hidden md:block">
                 <button onclick="document.getElementById('auth-modal').classList.remove('hidden')" class="btn-cartoon px-6 py-2">Login</button>
             </div>
-            <!-- Hamburger Menu Icon for Mobile Only -->
             <button onclick="toggleMobileNav()" class="md:hidden text-2xl text-gray-700 dark:text-gray-200 focus:outline-none w-10 h-10 rounded-xl bg-black/5 dark:bg-white/5 flex items-center justify-center transition">
                 <i id="mobile-menu-icon" class="fa-solid fa-bars"></i>
             </button>
@@ -272,7 +225,6 @@
         </div>
     </nav>
 
-    <!-- Mobile Drawer for Tab Navigation -->
     <div id="mobile-nav-drawer" class="hidden flex-col mx-4 mt-2 p-4 glass-card shadow-md gap-3 md:hidden z-40 font-semibold text-gray-600 dark:text-gray-300">
         <button onclick="switchTab('home'); toggleMobileNav()" class="w-full text-left py-2 px-3 rounded-xl hover:bg-brand-primary/10 flex items-center gap-2"><i class="fa-solid fa-house text-brand-primary w-5"></i>Home</button>
         <button onclick="switchTab('studio-assets'); toggleMobileNav()" class="w-full text-left py-2 px-3 rounded-xl hover:bg-brand-primary/10 flex items-center gap-2"><i class="fa-solid fa-box-open text-brand-primary w-5"></i>Studio Assets</button>
@@ -289,7 +241,6 @@
     <main class="flex-grow p-8 max-w-7xl mx-auto w-full z-10">
         
         <section id="home" class="tab-content block opacity-100">
-            <!-- Hero Stats & Visual -->
             <div class="grid grid-cols-1 md:grid-cols-2 gap-12 items-center mb-16 pt-6">
                 <div class="pop-in delay-1">
                     <div class="inline-block bg-white/60 dark:bg-slate-800/60 backdrop-blur-md border border-white dark:border-slate-700 rounded-full px-4 py-1 mb-4 shadow-sm font-semibold text-sm">
@@ -304,7 +255,6 @@
                         <button onclick="switchTab('studio-assets')" id="display-home-btn" class="btn-cartoon px-8 py-3 text-lg transform hover:scale-105 transition-transform">Browse Assets!</button>
                     </div>
                 </div>
-                <!-- 3D Layer Floating Image Box Component -->
                 <div class="glass-card p-4 relative animate-float pop-in delay-2 group border border-white/80 dark:border-slate-800/80">
                     <div class="overflow-hidden rounded-xl relative">
                         <img id="display-home-img" src="hero-showcase.png" onerror="this.src='https://images.unsplash.com/photo-1605342417730-10ebcb1a1ab5?w=800&q=80'" alt="Home Visual" class="w-full h-80 object-cover shadow-inner bg-gray-200 dark:bg-gray-800 group-hover:scale-105 transition-transform duration-700 ease-out">
@@ -349,7 +299,6 @@
                 </div>
             </div>
 
-            <!-- About Me Section -->
             <div class="glass-card p-8 md:p-12 mb-10 pop-in delay-2 mt-8 border-t-4 border-brand-primary relative overflow-hidden">
                 <div class="absolute top-0 right-0 p-4 opacity-5 pointer-events-none select-none">
                     <i class="fa-solid fa-address-card text-9xl text-brand-primary"></i>
@@ -485,7 +434,6 @@
             </div>
         </section>
 
-        <!-- Admin Tab -->
         <section id="admin" class="tab-content hidden opacity-0">
             <div class="flex gap-3 mb-8 glass-card p-3 overflow-x-auto no-scrollbar">
                 <button onclick="toggleAdminPanel('upload')" id="btn-admin-upload" class="font-bold text-white bg-green-500 rounded-xl px-5 py-2 shadow-sm transition whitespace-nowrap">Upload Content</button>
@@ -494,7 +442,6 @@
                 <button onclick="toggleAdminPanel('inbox')" id="btn-admin-inbox" class="font-bold text-gray-600 dark:text-gray-300 hover:text-gray-900 hover:bg-white/50 rounded-xl px-5 py-2 transition whitespace-nowrap">Support Inbox</button>
             </div>
 
-            <!-- Upload Section -->
             <div id="admin-upload-section" class="glass-card p-8 pop-in block">
                 <h2 class="text-2xl font-bold text-gray-900 dark:text-white mb-2 flex items-center gap-3">
                     <div class="bg-green-100/50 dark:bg-green-950/40 p-2 rounded-lg border border-green-200 text-green-600 shadow-sm"><i class="fa-solid fa-cloud-arrow-up"></i></div> Upload to Website
@@ -556,7 +503,6 @@
                 </form>
             </div>
 
-            <!-- Edit Home Page Section -->
             <div id="admin-edit-home-section" class="hidden glass-card p-8 pop-in">
                 <h2 class="text-2xl font-bold text-gray-900 dark:text-white mb-2 flex items-center gap-3">
                     <div class="bg-purple-100/50 dark:bg-purple-950/40 p-2 rounded-lg border border-purple-200 text-brand-primary shadow-sm"><i class="fa-solid fa-pen-to-square"></i></div> Edit Home Page Elements
@@ -636,7 +582,6 @@
                 </form>
             </div>
 
-            <!-- Edit Profile & About Section -->
             <div id="admin-edit-profile-section" class="hidden glass-card p-8 pop-in">
                 <h2 class="text-2xl font-bold text-gray-900 dark:text-white mb-2 flex items-center gap-3">
                     <div class="bg-amber-100/50 dark:bg-amber-950/40 p-2 rounded-lg border border-amber-200 text-amber-500 shadow-sm"><i class="fa-solid fa-id-card"></i></div> Edit Profile & About Info
@@ -695,7 +640,6 @@
                 </form>
             </div>
 
-            <!-- Inbox Section -->
             <div id="admin-inbox-section" class="hidden glass-card p-8 pop-in">
                 <div class="flex justify-between items-center mb-6 border-b border-gray-200 dark:border-gray-700 pb-4">
                     <h2 class="text-2xl font-bold text-gray-900 dark:text-white flex items-center gap-3">
@@ -714,7 +658,6 @@
 
     </main>
 
-    <!-- Asset Fullscreen Modal -->
     <div id="fullscreen-overlay" class="fixed inset-0 bg-black/90 backdrop-blur-md hidden z-[200] flex flex-col justify-center items-center p-4 sm:p-6" onclick="closeAssetView()">
         <div class="bg-white dark:bg-[#111827] w-full max-w-4xl h-full max-h-[90vh] rounded-2xl shadow-2xl overflow-y-auto no-scrollbar relative flex flex-col border border-gray-200 dark:border-gray-700 pop-in" onclick="event.stopPropagation()">
             <button onclick="closeAssetView()" class="absolute top-4 right-4 text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white transition text-2xl z-10 w-10 h-10 bg-white/50 dark:bg-slate-800/80 rounded-full flex items-center justify-center backdrop-blur-sm"><i class="fa-solid fa-xmark"></i></button>
@@ -753,13 +696,11 @@
         </div>
     </div>
 
-    <!-- Toast Component -->
     <div id="toast" class="fixed bottom-10 right-10 px-5 py-3 rounded-xl shadow-lg font-semibold flex items-center gap-3 z-[300] border border-white/50 bg-white/80 text-gray-900">
         <i id="toast-icon" class="fa-solid text-xl"></i>
         <span id="toast-msg">Notification</span>
     </div>
 
-    <!-- Auth Modal with QoL Password Visibility View Toggle -->
     <div id="auth-modal" class="fixed inset-0 bg-gray-900/80 backdrop-blur-sm hidden z-[100] flex items-center justify-center p-4">
         <div class="glass-card p-8 w-full max-w-md relative pop-in max-h-[90vh] overflow-y-auto no-scrollbar">
             <button onclick="document.getElementById('auth-modal').classList.add('hidden')" class="absolute top-4 right-4 text-gray-400 hover:text-gray-900 dark:hover:text-white transition text-xl bg-white/50 dark:bg-slate-800 w-8 h-8 rounded-full flex items-center justify-center"><i class="fa-solid fa-xmark"></i></button>
@@ -806,7 +747,6 @@
         </div>
     </div>
 
-    <!-- User Account Edit Modal -->
     <div id="user-edit-modal" class="fixed inset-0 bg-gray-900/80 backdrop-blur-sm hidden z-[100] flex items-center justify-center p-4">
         <div class="glass-card p-8 w-full max-w-md relative pop-in max-h-[90vh] overflow-y-auto no-scrollbar">
             <button onclick="closeUserEditModal()" class="absolute top-4 right-4 text-gray-400 hover:text-gray-900 dark:hover:text-white transition text-xl bg-white/50 dark:bg-slate-800 w-8 h-8 rounded-full flex items-center justify-center"><i class="fa-solid fa-xmark"></i></button>
@@ -835,13 +775,17 @@
         </div>
     </div>
 
-    <!-- Back to Top Smooth Button Widget -->
     <button id="btn-back-to-top" onclick="scrollToTop()" class="btn-cartoon w-12 h-12 flex items-center justify-center shadow-lg transform hover:-translate-y-1 transition" title="Back to Top">
         <i class="fa-solid fa-arrow-up text-lg"></i>
     </button>
 
-    <!-- Scripts -->
     <script>
+        // --- SUPABASE INITIALIZATION ---
+        const { createClient } = supabase;
+        const supabaseUrl = 'https://ngoywknktovkkhewsbos.supabase.co';
+        const supabaseKey = 'sb_publishable_70BhPk6LVvMIaKAda72m5w_ygs3bCqQ';
+        const sbClient = createClient(supabaseUrl, supabaseKey);
+
         const fallbackMainLogo = "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=150";
 
         let siteData = {
@@ -882,13 +826,11 @@
         let currentCategoryFilter = 'All';
         let currentlyViewedAsset = ''; 
 
-        // Quality of Life: Character Count Handler
         function updateCharCounter(fieldId, counterId, maxLength) {
             const currentLength = document.getElementById(fieldId).value.length;
             document.getElementById(counterId).innerText = `${currentLength} / ${maxLength}`;
         }
 
-        // Quality of Life: Password Mask Reveal Control Toggle
         function togglePasswordReveal(inputId, iconId) {
             const passwordInput = document.getElementById(inputId);
             const eyeIcon = document.getElementById(iconId);
@@ -901,40 +843,88 @@
             }
         }
 
-        // Quality of Life: Back To Top Tracker Monitor Logic
         window.addEventListener('scroll', () => {
             const topBtn = document.getElementById('btn-back-to-top');
-            if (window.scrollY > 400) {
-                topBtn.classList.add('visible');
-            } else {
-                topBtn.classList.remove('visible');
-            }
+            if (window.scrollY > 400) topBtn.classList.add('visible');
+            else topBtn.classList.remove('visible');
         });
 
         function scrollToTop() {
             window.scrollTo({ top: 0, behavior: 'smooth' });
         }
 
-        function loadSiteData() {
+        // --- DUAL STORAGE SYNC LOGIC ---
+        async function loadSiteData() {
+            // 1. Load Local Storage for instant visual render
             const savedData = localStorage.getItem('agentSimSiteData');
             if(savedData) {
                 try {
                     const parsed = JSON.parse(savedData);
                     if(parsed && parsed.homeSettings) siteData = {...siteData, ...parsed};
-                } catch(e) { console.error("Error loading layout configs:", e); }
+                } catch(e) { console.error("Error parsing local layout configs:", e); }
             }
             
             const savedUsers = localStorage.getItem('agentSimRegisteredUsers');
             if(savedUsers) {
                 try { registeredUsers = JSON.parse(savedUsers); } catch(e) { console.error(e); }
             }
+
+            // 2. Fetch from Supabase Cloud (Fallback if valid data found)
+            try {
+                const { data, error } = await sbClient
+                    .from('app_state')
+                    .select('*')
+                    .in('id', ['site_data', 'registered_users']);
+                
+                if (data && !error) {
+                    const sbSiteData = data.find(d => d.id === 'site_data');
+                    if (sbSiteData && sbSiteData.payload) {
+                        siteData = { ...siteData, ...sbSiteData.payload };
+                        localStorage.setItem('agentSimSiteData', JSON.stringify(siteData));
+                    }
+                    
+                    const sbUsers = data.find(d => d.id === 'registered_users');
+                    if (sbUsers && sbUsers.payload) {
+                        registeredUsers = sbUsers.payload;
+                        localStorage.setItem('agentSimRegisteredUsers', JSON.stringify(registeredUsers));
+                    }
+                    // Re-render silently to ensure exact cloud match
+                    renderData(); 
+                } else if (error) {
+                    console.warn("Supabase Fetch Warning (Table might not exist yet):", error.message);
+                }
+            } catch (err) {
+                console.warn("Supabase connection issue:", err);
+            }
         }
         
-        function saveSiteData() {
+        async function saveSiteData() {
+            // Save locally
             localStorage.setItem('agentSimSiteData', JSON.stringify(siteData));
+            
+            // Sync to Supabase
+            try {
+                await sbClient.from('app_state').upsert([
+                    { id: 'site_data', payload: siteData }
+                ]);
+            } catch (err) {
+                console.warn("Failed to sync site data to Supabase", err);
+            }
         }
 
-        window.onload = () => {
+        async function saveUsersData() {
+             localStorage.setItem('agentSimRegisteredUsers', JSON.stringify(registeredUsers));
+             try {
+                await sbClient.from('app_state').upsert([
+                    { id: 'registered_users', payload: registeredUsers }
+                ]);
+            } catch (err) {
+                console.warn("Failed to sync users to Supabase", err);
+            }
+        }
+        // -------------------------------
+
+        window.onload = async () => {
             if (localStorage.getItem('themeMode') === 'light') {
                 document.documentElement.classList.remove('dark');
                 document.getElementById('dark-icon').className = 'fa-solid fa-moon';
@@ -943,7 +933,8 @@
                 document.getElementById('dark-icon').className = 'fa-solid fa-sun';
             }
 
-            loadSiteData();
+            // Kick off dual sync architecture
+            await loadSiteData();
 
             const savedUser = localStorage.getItem('agentSimUser');
             if (savedUser) {
@@ -1020,7 +1011,6 @@
                 }, 50);
             }
             
-            // QoL Tab Line Highlight Transitions
             document.querySelectorAll('.nav-btn').forEach(btn => {
                 btn.classList.remove('active-tab', 'text-black', 'dark:text-white');
                 btn.classList.add('text-gray-600', 'dark:text-gray-300');
@@ -1057,7 +1047,7 @@
                 const proceedRegistration = (avatarData) => {
                     const newUser = { role: 'user', name: first, username: user, password: pass, img: avatarData, age: age, email: '' };
                     registeredUsers.push(newUser);
-                    localStorage.setItem('agentSimRegisteredUsers', JSON.stringify(registeredUsers));
+                    saveUsersData(); // Updates both local and Supabase
                     currentUser = newUser;
                     finalizeLoginSequence(first);
                 };
@@ -1088,7 +1078,7 @@
         }
 
         function finalizeLoginSequence(name) {
-            localStorage.setItem('agentSimUser', JSON.stringify(currentUser));
+            localStorage.setItem('agentSimUser', JSON.stringify(currentUser)); // Session scope only
             document.getElementById('auth-modal').classList.add('hidden');
             document.getElementById('login-form').reset();
             showToast(`Welcome ${name}!`, 'success');
@@ -1128,7 +1118,7 @@
                     const userIndex = registeredUsers.findIndex(u => u.username === currentUser.username);
                     if(userIndex !== -1) {
                         registeredUsers[userIndex] = currentUser;
-                        localStorage.setItem('agentSimRegisteredUsers', JSON.stringify(registeredUsers));
+                        saveUsersData(); // Updates both local and Supabase
                     }
                 }
                 
@@ -1337,6 +1327,7 @@
 
         function handleSupportMail(e) {
             e.preventDefault();
+            if(!siteData.messages) siteData.messages = [];
             siteData.messages.push({ 
                 name: document.getElementById('sup-name').value, 
                 email: document.getElementById('sup-email').value, 
@@ -1423,12 +1414,16 @@
                 itemEntry.video = videoLink;
                 finalizePublish();
             } else {
-                const imgElement = document.getElementById('upload-img-file').files[0];
+                const imgFiles = document.getElementById('upload-img-file').files;
+                const imgElement = imgFiles.length > 0 ? imgFiles[0] : null;
+
                 const processWithImage = (imgSrc) => {
                     itemEntry.img = imgSrc;
                     if (dest === 'studio-assets') {
                         itemEntry.category = document.getElementById('upload-category').value;
-                        const structBin = document.getElementById('upload-binary-file').files[0];
+                        const structBinFiles = document.getElementById('upload-binary-file').files;
+                        const structBin = structBinFiles.length > 0 ? structBinFiles[0] : null;
+                        
                         if (structBin) {
                             const binReader = new FileReader();
                             binReader.onload = function(evt) {
