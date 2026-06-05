@@ -6,7 +6,7 @@
     <title>Agent Simulator</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Fredoka:wght@600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght=400;500;600;700&family=Fredoka:wght=600;700&display=swap" rel="stylesheet">
     
     <script>
         tailwind.config = {
@@ -59,6 +59,7 @@
             box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
         }
 
+        /* --- BUTTON EFFECT KEPT EXACTLY UNCHANGED --- */
         .btn-cartoon {
             background-color: #8B5CF6;
             color: #ffffff;
@@ -84,6 +85,7 @@
         .btn-cartoon:hover:not(:disabled) {
             background-color: #7C3AED;
         }
+        /* -------------------------------------------- */
 
         .input-glass {
             background: rgba(255, 255, 255, 0.7);
@@ -112,16 +114,30 @@
         .no-scrollbar::-webkit-scrollbar { display: none; }
         .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
 
+        /* UPGRADED HERO FLOATING EFFECT */
         @keyframes float {
-            0%, 100% { transform: translateY(0px) rotate(0deg); filter: drop-shadow(0 15px 20px rgba(139, 92, 246, 0.15)); }
-            50% { transform: translateY(-16px) rotate(1.5deg); filter: drop-shadow(0 30px 35px rgba(139, 92, 246, 0.35)); }
+            0%, 100% { 
+                transform: translateY(0px) rotate(0deg); 
+                filter: drop-shadow(0 15px 20px rgba(139, 92, 246, 0.15));
+            }
+            50% { 
+                transform: translateY(-16px) rotate(1.5deg); 
+                filter: drop-shadow(0 30px 35px rgba(139, 92, 246, 0.35));
+            }
         }
         .animate-float { animation: float 5s ease-in-out infinite; }
 
+        /* BACKDROP GLOW EFFECTS */
         .ambient-glow {
-            position: absolute; width: 250px; height: 250px;
+            position: absolute;
+            width: 250px;
+            height: 250px;
             background: radial-gradient(circle, rgba(139, 92, 246, 0.4) 0%, rgba(139, 92, 246, 0) 70%);
-            top: 20%; right: 10%; z-index: 0; pointer-events: none; filter: blur(40px);
+            top: 20%;
+            right: 10%;
+            z-index: 0;
+            pointer-events: none;
+            filter: blur(40px);
             animation: pulseGlow 8s ease-in-out infinite alternate;
         }
         @keyframes pulseGlow {
@@ -144,27 +160,54 @@
         .tab-content { transition: opacity 0.3s ease-in-out; }
 
         .text-highlighter {
-            position: relative; z-index: 1; display: inline-block;
+            position: relative;
+            z-index: 1;
+            display: inline-block;
         }
         .text-highlighter::after {
-            content: ''; position: absolute; bottom: 2px; left: -2px; right: -2px; height: 40%;
-            background: rgba(139, 92, 246, 0.4); z-index: -1; transform: skewX(-15deg); border-radius: 2px;
+            content: '';
+            position: absolute;
+            bottom: 2px;
+            left: -2px;
+            right: -2px;
+            height: 40%;
+            background: rgba(139, 92, 246, 0.4);
+            z-index: -1;
+            transform: skewX(-15deg);
+            border-radius: 2px;
         }
 
         input[type="file"]::file-selector-button {
-            background-color: rgba(255, 255, 255, 0.8); color: #111; border: 1px solid rgba(0,0,0,0.1);
-            padding: 8px 16px; border-radius: 8px; cursor: pointer; font-weight: 600; margin-right: 10px; transition: background 0.2s;
+            background-color: rgba(255, 255, 255, 0.8);
+            color: #111;
+            border: 1px solid rgba(0,0,0,0.1);
+            padding: 8px 16px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            margin-right: 10px;
+            transition: background 0.2s;
         }
-        input[type="file"]::file-selector-button:hover { background-color: rgba(255, 255, 255, 1); }
-        html.dark input[type="file"]::file-selector-button { background-color: #374151; color: #fff; border-color: rgba(255,255,255,0.1); }
-        html.dark input[type="file"]::file-selector-button:hover { background-color: #4b5563; }
+        input[type="file"]::file-selector-button:hover {
+            background-color: rgba(255, 255, 255, 1);
+        }
+        html.dark input[type="file"]::file-selector-button {
+            background-color: #374151;
+            color: #fff;
+            border-color: rgba(255,255,255,0.1);
+        }
+        html.dark input[type="file"]::file-selector-button:hover {
+            background-color: #4b5563;
+        }
 
         #toast {
             transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), opacity 0.3s ease;
-            transform: translateY(100px) scale(0.9); opacity: 0; z-index: 9999;
+            transform: translateY(100px) scale(0.9);
+            opacity: 0;
         }
         #toast.show { transform: translateY(0) scale(1); opacity: 1; }
 
+        /* QoL Tab Active Line Animation */
         .nav-btn { position: relative; padding-bottom: 4px; }
         .nav-btn::after {
             content: ''; position: absolute; bottom: 0; left: 50%; width: 0; height: 3px;
@@ -172,6 +215,7 @@
         }
         .nav-btn.active-tab::after { width: 80%; }
 
+        /* Back to top button styling */
         #btn-back-to-top {
             position: fixed; bottom: 24px; right: 24px; z-index: 80; opacity: 0; transform: translateY(20px);
             transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); pointer-events: none;
@@ -181,6 +225,7 @@
 </head>
 <body class="min-h-screen flex flex-col relative dark:text-gray-100">
 
+    <!-- Ambient Visual Glow Component Behind Hero -->
     <div class="ambient-glow"></div>
 
     <nav class="sticky top-0 z-50 glass-card mx-4 mt-4 px-6 py-4 flex justify-between items-center shadow-lg">
@@ -189,6 +234,7 @@
             <span id="nav-display-name" class="text-2xl font-cartoon font-bold tracking-wide group-hover:text-brand-primary dark:text-white transition">Agent Simulator</span>
         </div>
         
+        <!-- Desktop Tabs -->
         <div class="hidden md:flex gap-6 font-semibold text-gray-600 dark:text-gray-300 text-lg items-center">
             <button onclick="switchTab('home')" class="nav-btn active-tab hover:text-black dark:hover:text-white transition text-black dark:text-white" data-target="home">Home</button>
             <button onclick="switchTab('studio-assets')" class="nav-btn hover:text-black dark:hover:text-white transition" data-target="studio-assets">Studio Assets</button>
@@ -208,6 +254,7 @@
             <div id="user-controls" class="hidden md:block">
                 <button onclick="document.getElementById('auth-modal').classList.remove('hidden')" class="btn-cartoon px-6 py-2">Login</button>
             </div>
+            <!-- Hamburger Menu Icon for Mobile Only -->
             <button onclick="toggleMobileNav()" class="md:hidden text-2xl text-gray-700 dark:text-gray-200 focus:outline-none w-10 h-10 rounded-xl bg-black/5 dark:bg-white/5 flex items-center justify-center transition">
                 <i id="mobile-menu-icon" class="fa-solid fa-bars"></i>
             </button>
@@ -225,6 +272,7 @@
         </div>
     </nav>
 
+    <!-- Mobile Drawer for Tab Navigation -->
     <div id="mobile-nav-drawer" class="hidden flex-col mx-4 mt-2 p-4 glass-card shadow-md gap-3 md:hidden z-40 font-semibold text-gray-600 dark:text-gray-300">
         <button onclick="switchTab('home'); toggleMobileNav()" class="w-full text-left py-2 px-3 rounded-xl hover:bg-brand-primary/10 flex items-center gap-2"><i class="fa-solid fa-house text-brand-primary w-5"></i>Home</button>
         <button onclick="switchTab('studio-assets'); toggleMobileNav()" class="w-full text-left py-2 px-3 rounded-xl hover:bg-brand-primary/10 flex items-center gap-2"><i class="fa-solid fa-box-open text-brand-primary w-5"></i>Studio Assets</button>
@@ -241,6 +289,7 @@
     <main class="flex-grow p-8 max-w-7xl mx-auto w-full z-10">
         
         <section id="home" class="tab-content block opacity-100">
+            <!-- Hero Stats & Visual -->
             <div class="grid grid-cols-1 md:grid-cols-2 gap-12 items-center mb-16 pt-6">
                 <div class="pop-in delay-1">
                     <div class="inline-block bg-white/60 dark:bg-slate-800/60 backdrop-blur-md border border-white dark:border-slate-700 rounded-full px-4 py-1 mb-4 shadow-sm font-semibold text-sm">
@@ -255,9 +304,10 @@
                         <button onclick="switchTab('studio-assets')" id="display-home-btn" class="btn-cartoon px-8 py-3 text-lg transform hover:scale-105 transition-transform">Browse Assets!</button>
                     </div>
                 </div>
+                <!-- 3D Layer Floating Image Box Component -->
                 <div class="glass-card p-4 relative animate-float pop-in delay-2 group border border-white/80 dark:border-slate-800/80">
                     <div class="overflow-hidden rounded-xl relative">
-                        <img id="display-home-img" src="https://images.unsplash.com/photo-1605342417730-10ebcb1a1ab5?w=1200&q=80" onerror="this.src='https://images.unsplash.com/photo-1542751371-adc38448a05e?w=1200&q=80'" alt="Home Visual" class="w-full h-80 object-cover shadow-inner bg-gray-200 dark:bg-gray-800 group-hover:scale-105 transition-transform duration-700 ease-out">
+                        <img id="display-home-img" src="hero-showcase.png" onerror="this.src='https://images.unsplash.com/photo-1605342417730-10ebcb1a1ab5?w=800&q=80'" alt="Home Visual" class="w-full h-80 object-cover shadow-inner bg-gray-200 dark:bg-gray-800 group-hover:scale-105 transition-transform duration-700 ease-out">
                         <div class="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
                     </div>
                     <div class="absolute -bottom-4 -left-4 bg-white/95 dark:bg-slate-800/95 backdrop-blur-md border border-white dark:border-slate-700 px-5 py-2.5 rounded-xl shadow-lg flex items-center gap-2 transform group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform">
@@ -299,6 +349,7 @@
                 </div>
             </div>
 
+            <!-- About Me Section -->
             <div class="glass-card p-8 md:p-12 mb-10 pop-in delay-2 mt-8 border-t-4 border-brand-primary relative overflow-hidden">
                 <div class="absolute top-0 right-0 p-4 opacity-5 pointer-events-none select-none">
                     <i class="fa-solid fa-address-card text-9xl text-brand-primary"></i>
@@ -434,6 +485,7 @@
             </div>
         </section>
 
+        <!-- Admin Tab -->
         <section id="admin" class="tab-content hidden opacity-0">
             <div class="flex gap-3 mb-8 glass-card p-3 overflow-x-auto no-scrollbar">
                 <button onclick="toggleAdminPanel('upload')" id="btn-admin-upload" class="font-bold text-white bg-green-500 rounded-xl px-5 py-2 shadow-sm transition whitespace-nowrap">Upload Content</button>
@@ -442,6 +494,7 @@
                 <button onclick="toggleAdminPanel('inbox')" id="btn-admin-inbox" class="font-bold text-gray-600 dark:text-gray-300 hover:text-gray-900 hover:bg-white/50 rounded-xl px-5 py-2 transition whitespace-nowrap">Support Inbox</button>
             </div>
 
+            <!-- Upload Section -->
             <div id="admin-upload-section" class="glass-card p-8 pop-in block">
                 <h2 class="text-2xl font-bold text-gray-900 dark:text-white mb-2 flex items-center gap-3">
                     <div class="bg-green-100/50 dark:bg-green-950/40 p-2 rounded-lg border border-green-200 text-green-600 shadow-sm"><i class="fa-solid fa-cloud-arrow-up"></i></div> Upload to Website
@@ -503,6 +556,7 @@
                 </form>
             </div>
 
+            <!-- Edit Home Page Section -->
             <div id="admin-edit-home-section" class="hidden glass-card p-8 pop-in">
                 <h2 class="text-2xl font-bold text-gray-900 dark:text-white mb-2 flex items-center gap-3">
                     <div class="bg-purple-100/50 dark:bg-purple-950/40 p-2 rounded-lg border border-purple-200 text-brand-primary shadow-sm"><i class="fa-solid fa-pen-to-square"></i></div> Edit Home Page Elements
@@ -528,7 +582,7 @@
                         </div>
                         <div>
                             <label class="block font-semibold mb-2 text-gray-700 dark:text-gray-300 text-sm">Hero Showcase Image (Upload Local File)</label>
-                            <input type="file" id="edit-home-img-file" accept="image/*" class="w-full input-glass p-2 text-sm">
+                            <input type="file" id="edit-home-img-file" accept="image/*" class="w-full input-glass p-2">
                         </div>
                     </div>
 
@@ -582,11 +636,12 @@
                 </form>
             </div>
 
+            <!-- Edit Profile & About Section -->
             <div id="admin-edit-profile-section" class="hidden glass-card p-8 pop-in">
                 <h2 class="text-2xl font-bold text-gray-900 dark:text-white mb-2 flex items-center gap-3">
-                    <div class="bg-amber-100/50 dark:bg-amber-950/40 p-2 rounded-lg border border-amber-200 text-amber-500 shadow-sm"><i class="fa-solid fa-id-card"></i></div> Edit Global Profile Info
+                    <div class="bg-amber-100/50 dark:bg-amber-950/40 p-2 rounded-lg border border-amber-200 text-amber-500 shadow-sm"><i class="fa-solid fa-id-card"></i></div> Edit Profile & About Info
                 </h2>
-                <p class="text-gray-500 mb-6 text-sm">Update the primary developer details, About Me descriptions, and social URLs across the site.</p>
+                <p class="text-gray-500 mb-6 text-sm">Update your basic details, About Me descriptions, and social URLs across the site.</p>
 
                 <form id="edit-profile-form" onsubmit="handleProfileEdit(event)">
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6 bg-white/40 dark:bg-slate-800/40 p-6 rounded-2xl border border-white/60 dark:border-slate-700 mb-6">
@@ -640,6 +695,7 @@
                 </form>
             </div>
 
+            <!-- Inbox Section -->
             <div id="admin-inbox-section" class="hidden glass-card p-8 pop-in">
                 <div class="flex justify-between items-center mb-6 border-b border-gray-200 dark:border-gray-700 pb-4">
                     <h2 class="text-2xl font-bold text-gray-900 dark:text-white flex items-center gap-3">
@@ -658,6 +714,7 @@
 
     </main>
 
+    <!-- Asset Fullscreen Modal -->
     <div id="fullscreen-overlay" class="fixed inset-0 bg-black/90 backdrop-blur-md hidden z-[200] flex flex-col justify-center items-center p-4 sm:p-6" onclick="closeAssetView()">
         <div class="bg-white dark:bg-[#111827] w-full max-w-4xl h-full max-h-[90vh] rounded-2xl shadow-2xl overflow-y-auto no-scrollbar relative flex flex-col border border-gray-200 dark:border-gray-700 pop-in" onclick="event.stopPropagation()">
             <button onclick="closeAssetView()" class="absolute top-4 right-4 text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white transition text-2xl z-10 w-10 h-10 bg-white/50 dark:bg-slate-800/80 rounded-full flex items-center justify-center backdrop-blur-sm"><i class="fa-solid fa-xmark"></i></button>
@@ -679,7 +736,7 @@
                     <p class="text-gray-500 dark:text-gray-400 mb-6 text-sm">See what other developers think or share your execution feedback for this specific asset.</p>
 
                     <div id="review-auth-block" class="mb-8 p-4 bg-amber-50 dark:bg-amber-950/30 border border-amber-200 dark:border-amber-900 rounded-xl text-amber-800 dark:text-amber-300 font-medium text-sm flex items-center gap-3">
-                        <i class="fa-solid fa-lock text-base animate-pulse"></i> You must be logged into your account to submit asset reviews.
+                        <i class="fa-solid fa-lock text-base animate-bounce"></i> You must be logged into your account to submit asset reviews.
                     </div>
 
                     <form id="review-form" class="hidden space-y-4 mb-8 bg-gray-50 dark:bg-slate-800/50 p-5 rounded-xl border border-gray-100 dark:border-gray-700" onsubmit="handleReviewSubmit(event)">
@@ -696,35 +753,13 @@
         </div>
     </div>
 
-    <div id="account-modal" class="fixed inset-0 bg-gray-900/80 backdrop-blur-sm hidden z-[110] flex items-center justify-center p-4">
-        <div class="glass-card p-8 w-full max-w-md relative pop-in max-h-[90vh] overflow-y-auto no-scrollbar">
-            <button onclick="document.getElementById('account-modal').classList.add('hidden')" class="absolute top-4 right-4 text-gray-400 hover:text-gray-900 dark:hover:text-white transition text-xl bg-white/50 dark:bg-slate-800 w-8 h-8 rounded-full flex items-center justify-center"><i class="fa-solid fa-xmark"></i></button>
-            <h2 class="text-2xl font-bold mb-6 text-center text-gray-900 dark:text-white font-cartoon">Edit Personal Account</h2>
-            <p class="text-sm text-center text-gray-500 dark:text-gray-400 mb-6">Update your login profile details.</p>
-            <form id="account-edit-form" onsubmit="handleAccountUpdate(event)">
-                <div class="space-y-4 mb-6">
-                    <div>
-                        <label class="block font-semibold text-sm mb-1 text-gray-700 dark:text-gray-300">Display Name</label>
-                        <input type="text" id="acc-display-name" class="w-full input-glass p-3" required>
-                    </div>
-                    <div>
-                        <label class="block font-semibold text-sm mb-1 text-gray-700 dark:text-gray-300">Upload Profile Logo (Local File)</label>
-                        <input type="file" id="acc-logo-file" accept="image/*" class="w-full input-glass p-2 text-sm">
-                    </div>
-                    <div>
-                        <label class="block font-semibold text-sm mb-1 text-gray-700 dark:text-gray-300">Age</label>
-                        <input type="number" id="acc-age" class="w-full input-glass p-3" required>
-                    </div>
-                    <div>
-                        <label class="block font-semibold text-sm mb-1 text-gray-700 dark:text-gray-300">Email Address</label>
-                        <input type="email" id="acc-email" class="w-full input-glass p-3" required>
-                    </div>
-                </div>
-                <button type="submit" class="w-full btn-cartoon py-3 text-lg">Save Changes</button>
-            </form>
-        </div>
+    <!-- Toast Component -->
+    <div id="toast" class="fixed bottom-10 right-10 px-5 py-3 rounded-xl shadow-lg font-semibold flex items-center gap-3 z-[300] border border-white/50 bg-white/80 text-gray-900">
+        <i id="toast-icon" class="fa-solid text-xl"></i>
+        <span id="toast-msg">Notification</span>
     </div>
 
+    <!-- Auth Modal with QoL Password Visibility View Toggle -->
     <div id="auth-modal" class="fixed inset-0 bg-gray-900/80 backdrop-blur-sm hidden z-[100] flex items-center justify-center p-4">
         <div class="glass-card p-8 w-full max-w-md relative pop-in max-h-[90vh] overflow-y-auto no-scrollbar">
             <button onclick="document.getElementById('auth-modal').classList.add('hidden')" class="absolute top-4 right-4 text-gray-400 hover:text-gray-900 dark:hover:text-white transition text-xl bg-white/50 dark:bg-slate-800 w-8 h-8 rounded-full flex items-center justify-center"><i class="fa-solid fa-xmark"></i></button>
@@ -771,18 +806,42 @@
         </div>
     </div>
 
+    <!-- User Account Edit Modal -->
+    <div id="user-edit-modal" class="fixed inset-0 bg-gray-900/80 backdrop-blur-sm hidden z-[100] flex items-center justify-center p-4">
+        <div class="glass-card p-8 w-full max-w-md relative pop-in max-h-[90vh] overflow-y-auto no-scrollbar">
+            <button onclick="closeUserEditModal()" class="absolute top-4 right-4 text-gray-400 hover:text-gray-900 dark:hover:text-white transition text-xl bg-white/50 dark:bg-slate-800 w-8 h-8 rounded-full flex items-center justify-center"><i class="fa-solid fa-xmark"></i></button>
+            <h2 class="text-2xl font-bold mb-6 text-center text-gray-900 dark:text-white">Edit Account Info</h2>
+            <form id="user-edit-form" onsubmit="handleUserEditSubmit(event)">
+                <div class="space-y-4 mb-6">
+                    <div>
+                        <label class="block font-semibold text-sm mb-1 text-gray-700 dark:text-gray-300">Profile Picture (Local File)</label>
+                        <input type="file" id="user-edit-pic" accept="image/*" class="w-full input-glass p-2 text-sm">
+                    </div>
+                    <div>
+                        <label class="block font-semibold text-sm mb-1 text-gray-700 dark:text-gray-300">Display Name</label>
+                        <input type="text" id="user-edit-name" class="w-full input-glass p-3" required>
+                    </div>
+                    <div>
+                        <label class="block font-semibold text-sm mb-1 text-gray-700 dark:text-gray-300">Age</label>
+                        <input type="number" id="user-edit-age" class="w-full input-glass p-3">
+                    </div>
+                    <div>
+                        <label class="block font-semibold text-sm mb-1 text-gray-700 dark:text-gray-300">Email Address</label>
+                        <input type="email" id="user-edit-email" class="w-full input-glass p-3">
+                    </div>
+                </div>
+                <button type="submit" class="w-full btn-cartoon py-3 text-lg mb-4">Save Changes</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Back to Top Smooth Button Widget -->
     <button id="btn-back-to-top" onclick="scrollToTop()" class="btn-cartoon w-12 h-12 flex items-center justify-center shadow-lg transform hover:-translate-y-1 transition" title="Back to Top">
         <i class="fa-solid fa-arrow-up text-lg"></i>
     </button>
 
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-
+    <!-- Scripts -->
     <script>
-        // Supabase Initialization & Constants
-        const SUPABASE_URL = 'https://ngoywknktovkkhewsbos.supabase.co';
-        const SUPABASE_KEY = 'sb_publishable_70BhPk6LVvMIaKAda72m5w_ygs3bCqQ';
-        const SUPABASE_REST_URL = `${SUPABASE_URL}/rest/v1/platform_data`; // Ensure this table is created in Supabase
-        
         const fallbackMainLogo = "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=150";
 
         let siteData = {
@@ -804,7 +863,7 @@
                 desc: 'Download advanced Lua scripts, share your game milestones, watch tutorials, and grow your player base.',
                 btnText: 'Browse Assets!',
                 badge2: 'System Online',
-                imgUrl: 'https://images.unsplash.com/photo-1605342417730-10ebcb1a1ab5?w=1200&q=80',
+                imgUrl: 'hero-showcase.png',
                 stat1Title: '10M+', stat1Desc: 'Place Visits',
                 stat2Title: '50K+', stat2Desc: 'Active Players',
                 stat3Title: '1,200+', stat3Desc: 'Lua Scripts',
@@ -823,12 +882,13 @@
         let currentCategoryFilter = 'All';
         let currentlyViewedAsset = ''; 
 
-        // Utilities
+        // Quality of Life: Character Count Handler
         function updateCharCounter(fieldId, counterId, maxLength) {
             const currentLength = document.getElementById(fieldId).value.length;
             document.getElementById(counterId).innerText = `${currentLength} / ${maxLength}`;
         }
 
+        // Quality of Life: Password Mask Reveal Control Toggle
         function togglePasswordReveal(inputId, iconId) {
             const passwordInput = document.getElementById(inputId);
             const eyeIcon = document.getElementById(iconId);
@@ -841,74 +901,40 @@
             }
         }
 
+        // Quality of Life: Back To Top Tracker Monitor Logic
         window.addEventListener('scroll', () => {
             const topBtn = document.getElementById('btn-back-to-top');
-            if (window.scrollY > 400) topBtn.classList.add('visible');
-            else topBtn.classList.remove('visible');
+            if (window.scrollY > 400) {
+                topBtn.classList.add('visible');
+            } else {
+                topBtn.classList.remove('visible');
+            }
         });
 
         function scrollToTop() {
             window.scrollTo({ top: 0, behavior: 'smooth' });
         }
 
-        // Database Syncing Logic
-        async function loadSiteData() {
-            // 1. Instantly populate from local storage for zero-lag rendering
-            const localFallback = localStorage.getItem('agentSimSiteData');
-            if(localFallback) {
+        function loadSiteData() {
+            const savedData = localStorage.getItem('agentSimSiteData');
+            if(savedData) {
                 try {
-                    const parsed = JSON.parse(localFallback);
+                    const parsed = JSON.parse(savedData);
                     if(parsed && parsed.homeSettings) siteData = {...siteData, ...parsed};
-                } catch(e) { console.error("Local sync parsing error:", e); }
-            }
-
-            // 2. Safely sync from Supabase (REST API approach)
-            try {
-                const res = await fetch(`${SUPABASE_REST_URL}?id=eq.1&select=payload`, {
-                    headers: { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}` }
-                });
-                if(res.ok) {
-                    const data = await res.json();
-                    if(data && data.length > 0 && data[0].payload) {
-                        siteData = {...siteData, ...data[0].payload};
-                        // Reinforce Local Storage with verified cloud truth
-                        localStorage.setItem('agentSimSiteData', JSON.stringify(siteData)); 
-                    }
-                }
-            } catch(err) {
-                console.warn('Supabase fetch returned offline. Safely retaining standard local storage fallback.', err);
+                } catch(e) { console.error("Error loading layout configs:", e); }
             }
             
-            // 3. Authenticate User Sessions (Locally locked)
             const savedUsers = localStorage.getItem('agentSimRegisteredUsers');
             if(savedUsers) {
                 try { registeredUsers = JSON.parse(savedUsers); } catch(e) { console.error(e); }
             }
         }
         
-        async function saveSiteData() {
-            // 1. Sync cache locally immediately
+        function saveSiteData() {
             localStorage.setItem('agentSimSiteData', JSON.stringify(siteData));
-            
-            // 2. Push to Supabase Engine (Upsert)
-            try {
-                await fetch(SUPABASE_REST_URL, {
-                    method: 'POST',
-                    headers: {
-                        'apikey': SUPABASE_KEY,
-                        'Authorization': `Bearer ${SUPABASE_KEY}`,
-                        'Content-Type': 'application/json',
-                        'Prefer': 'resolution=merge-duplicates'
-                    },
-                    body: JSON.stringify({ id: 1, payload: siteData })
-                });
-            } catch(err) {
-                console.warn('Supabase transmission blocked. Execution backed up firmly to Local Storage status.', err);
-            }
         }
 
-        window.onload = async () => {
-            // Theme setup
+        window.onload = () => {
             if (localStorage.getItem('themeMode') === 'light') {
                 document.documentElement.classList.remove('dark');
                 document.getElementById('dark-icon').className = 'fa-solid fa-moon';
@@ -917,10 +943,8 @@
                 document.getElementById('dark-icon').className = 'fa-solid fa-sun';
             }
 
-            // Async data loading block
-            await loadSiteData();
+            loadSiteData();
 
-            // Load active user session from infinity storage
             const savedUser = localStorage.getItem('agentSimUser');
             if (savedUser) {
                 try {
@@ -929,10 +953,9 @@
                         document.getElementById('nav-admin').classList.remove('hidden');
                         document.getElementById('nav-admin-mobile').classList.remove('hidden');
                     }
+                    updateUserUI();
                 } catch(e) { currentUser = null; }
             }
-            
-            updateUserUI();
             renderData();
             populateHomeEditorFields();
             populateProfileEditorFields();
@@ -997,14 +1020,13 @@
                 }, 50);
             }
             
+            // QoL Tab Line Highlight Transitions
             document.querySelectorAll('.nav-btn').forEach(btn => {
-                if(!btn.id || !btn.id.includes('nav-admin')) {
-                    btn.classList.remove('active-tab', 'text-black', 'dark:text-white');
-                    btn.classList.add('text-gray-600', 'dark:text-gray-300');
-                }
+                btn.classList.remove('active-tab', 'text-black', 'dark:text-white');
+                btn.classList.add('text-gray-600', 'dark:text-gray-300');
             });
             const activeNav = document.querySelector(`.nav-btn[data-target="${tabId}"]`);
-            if(activeNav && (!activeNav.id || !activeNav.id.includes('nav-admin'))) {
+            if(activeNav) {
                 activeNav.classList.remove('text-gray-600', 'dark:text-gray-300');
                 activeNav.classList.add('active-tab', 'text-black', 'dark:text-white');
             }
@@ -1049,7 +1071,7 @@
                 }
             } else {
                 if (user === 'Agent' && pass === 'AgentisAdmin') {
-                    currentUser = { role: 'admin', name: 'Admin', username: 'Agent', img: fallbackMainLogo, age: '30', email: 'admin@agentsimulator.com' };
+                    currentUser = { role: 'admin', name: 'Admin', img: fallbackMainLogo };
                     document.getElementById('nav-admin').classList.remove('hidden');
                     document.getElementById('nav-admin-mobile').classList.remove('hidden');
                     finalizeLoginSequence('Admin');
@@ -1073,6 +1095,57 @@
             updateUserUI();
             renderData();
         }
+        
+        function openUserEditModal() {
+            if(!currentUser) return;
+            document.getElementById('user-edit-name').value = currentUser.name || '';
+            document.getElementById('user-edit-age').value = currentUser.age || '';
+            document.getElementById('user-edit-email').value = currentUser.email || '';
+            document.getElementById('user-edit-modal').classList.remove('hidden');
+            document.getElementById('profile-dropdown').classList.add('hidden');
+        }
+
+        function closeUserEditModal() {
+            document.getElementById('user-edit-modal').classList.add('hidden');
+        }
+
+        function handleUserEditSubmit(e) {
+            e.preventDefault();
+            if(!currentUser) return;
+            
+            const newName = document.getElementById('user-edit-name').value;
+            const newAge = document.getElementById('user-edit-age').value;
+            const newEmail = document.getElementById('user-edit-email').value;
+            const fileInput = document.getElementById('user-edit-pic');
+            
+            const finalizeUserEdit = (imgData) => {
+                currentUser.name = newName;
+                currentUser.age = newAge;
+                currentUser.email = newEmail;
+                if(imgData) currentUser.img = imgData;
+                
+                if(currentUser.role !== 'admin') {
+                    const userIndex = registeredUsers.findIndex(u => u.username === currentUser.username);
+                    if(userIndex !== -1) {
+                        registeredUsers[userIndex] = currentUser;
+                        localStorage.setItem('agentSimRegisteredUsers', JSON.stringify(registeredUsers));
+                    }
+                }
+                
+                localStorage.setItem('agentSimUser', JSON.stringify(currentUser));
+                updateUserUI();
+                closeUserEditModal();
+                showToast('Account Info Updated!', 'success');
+            };
+            
+            if (fileInput.files && fileInput.files.length > 0) {
+                const reader = new FileReader();
+                reader.onload = function(evt) { finalizeUserEdit(evt.target.result); };
+                reader.readAsDataURL(fileInput.files[0]);
+            } else {
+                finalizeUserEdit(null);
+            }
+        }
 
         function toggleProfileMenu(e) {
             e.stopPropagation();
@@ -1083,79 +1156,22 @@
             document.getElementById('profile-dropdown').classList.add('hidden');
         });
 
-        // User Account Modifiers (Locally Safe Editing)
-        function openUserEditModal() {
-            if(!currentUser) return;
-            document.getElementById('acc-display-name').value = currentUser.name || '';
-            document.getElementById('acc-age').value = currentUser.age || '';
-            document.getElementById('acc-email').value = currentUser.email || '';
-            document.getElementById('account-modal').classList.remove('hidden');
-            document.getElementById('profile-dropdown').classList.add('hidden');
-        }
-
-        function handleAccountUpdate(e) {
-            e.preventDefault();
-            if(!currentUser) return;
-            const dName = document.getElementById('acc-display-name').value;
-            const dAge = document.getElementById('acc-age').value;
-            const dEmail = document.getElementById('acc-email').value;
-            const logoFile = document.getElementById('acc-logo-file').files[0];
-
-            const executeUpdate = (logoBase64) => {
-                currentUser.name = dName;
-                currentUser.age = dAge;
-                currentUser.email = dEmail;
-                if (logoBase64) currentUser.img = logoBase64;
-                
-                if (currentUser.role !== 'admin') {
-                    const uIndex = registeredUsers.findIndex(u => u.username === currentUser.username);
-                    if (uIndex !== -1) {
-                        registeredUsers[uIndex].name = dName;
-                        registeredUsers[uIndex].age = dAge;
-                        registeredUsers[uIndex].email = dEmail;
-                        if (logoBase64) registeredUsers[uIndex].img = logoBase64;
-                        localStorage.setItem('agentSimRegisteredUsers', JSON.stringify(registeredUsers));
-                    }
-                }
-                
-                localStorage.setItem('agentSimUser', JSON.stringify(currentUser));
-                updateUserUI();
-                renderData();
-                document.getElementById('account-modal').classList.add('hidden');
-                showToast('Account Info updated successfully!', 'success');
-            };
-
-            if (logoFile) {
-                const reader = new FileReader();
-                reader.onload = function(evt) { executeUpdate(evt.target.result); };
-                reader.readAsDataURL(logoFile);
-            } else {
-                executeUpdate(null);
-            }
-        }
-
         function updateUserUI() {
             if(!currentUser) return;
             const contentStructure = `
-                <div class="flex items-center gap-2 select-none w-full md:w-auto">
-                    <div onclick="toggleProfileMenu(event)" class="w-full flex items-center justify-between gap-3 bg-white/40 dark:bg-slate-800/40 backdrop-blur-md border border-white/60 dark:border-slate-700 shadow-sm px-4 py-2 rounded-2xl hover-pop cursor-pointer pop-in">
-                        <div class="flex items-center gap-3">
-                            <img src="${currentUser.img || fallbackMainLogo}" class="w-10 h-10 rounded-full object-cover border-2 border-white dark:border-slate-600 shadow-sm">
-                            <div class="flex flex-col text-left">
-                                <span class="font-bold text-sm text-gray-900 dark:text-white leading-tight">${currentUser.name}</span>
-                                ${currentUser.age ? `<span class="text-xs font-medium text-gray-500 dark:text-gray-400 leading-tight">Age: ${currentUser.age}</span>` : ''}
-                            </div>
-                        </div>
-                        <i class="fa-solid fa-chevron-down text-xs text-gray-400 ml-1"></i>
+                <div onclick="toggleProfileMenu(event)" class="flex items-center gap-3 bg-white/40 dark:bg-slate-800/40 backdrop-blur-md border border-white/60 dark:border-slate-700 shadow-sm px-4 py-2 rounded-2xl hover-pop cursor-pointer pop-in select-none">
+                    <img src="${currentUser.img || fallbackMainLogo}" class="w-10 h-10 rounded-full object-cover border-2 border-white dark:border-slate-600 shadow-sm">
+                    <div class="flex flex-col text-left">
+                        <span class="font-bold text-sm text-gray-900 dark:text-white leading-tight">${currentUser.name}</span>
+                        ${currentUser.age ? `<span class="text-xs font-medium text-gray-500 dark:text-gray-400 leading-tight">Age: ${currentUser.age}</span>` : ''}
                     </div>
+                    <i class="fa-solid fa-chevron-down text-xs text-gray-400 ml-1"></i>
                 </div>
             `;
             document.getElementById('user-controls').innerHTML = contentStructure;
             document.getElementById('user-controls-mobile').innerHTML = contentStructure;
-            
             document.getElementById('review-auth-block').classList.add('hidden');
             document.getElementById('review-form').classList.remove('hidden');
-            document.getElementById('logout-btn-container').classList.remove('hidden');
         }
 
         function logout() {
@@ -1174,7 +1190,6 @@
 
             document.getElementById('review-auth-block').classList.remove('hidden');
             document.getElementById('review-form').classList.add('hidden');
-            document.getElementById('logout-btn-container').classList.add('hidden');
             renderData();
         }
 
@@ -1253,11 +1268,11 @@
             document.getElementById('edit-profile-support').value = p.support || '';
         }
 
-        async function handleProfileEdit(e) {
+        function handleProfileEdit(e) {
             e.preventDefault();
             const logoInput = document.getElementById('edit-profile-logo-file');
             
-            const finalizeProfileSave = async (logoBase64) => {
+            const finalizeProfileSave = (logoBase64) => {
                 siteData.profile = {
                     displayName: document.getElementById('edit-profile-name').value,
                     logo: logoBase64 || siteData.profile.logo,
@@ -1269,9 +1284,9 @@
                     youtube: document.getElementById('edit-profile-youtube').value,
                     support: document.getElementById('edit-profile-support').value
                 };
-                await saveSiteData();
+                saveSiteData();
                 renderData();
-                showToast('Global Profile Settings Updated!', 'success');
+                showToast('Profile Settings Updated!', 'success');
             };
 
             if (logoInput.files && logoInput.files.length > 0) {
@@ -1279,15 +1294,15 @@
                 reader.onload = function(evt) { finalizeProfileSave(evt.target.result); };
                 reader.readAsDataURL(logoInput.files[0]);
             } else {
-                await finalizeProfileSave(null);
+                finalizeProfileSave(null);
             }
         }
 
-        async function handleHomeEdit(e) {
+        function handleHomeEdit(e) {
             e.preventDefault();
             const fileInput = document.getElementById('edit-home-img-file');
             
-            const finalizeHomeEdit = async (imgData) => {
+            const finalizeHomeEdit = (imgData) => {
                 siteData.homeSettings = {
                     badge1: document.getElementById('edit-badge1').value,
                     title1: document.getElementById('edit-title1').value,
@@ -1295,7 +1310,7 @@
                     desc: document.getElementById('edit-desc').value,
                     btnText: document.getElementById('edit-btn-text').value,
                     badge2: document.getElementById('edit-badge2').value,
-                    imgUrl: imgData || siteData.homeSettings.imgUrl || 'https://images.unsplash.com/photo-1605342417730-10ebcb1a1ab5?w=1200&q=80',
+                    imgUrl: imgData || siteData.homeSettings.imgUrl || 'hero-showcase.png',
                     stat1Title: document.getElementById('edit-stat1-title').value,
                     stat1Desc: document.getElementById('edit-stat1-desc').value,
                     stat2Title: document.getElementById('edit-stat2-title').value,
@@ -1306,7 +1321,7 @@
                     stat4Desc: document.getElementById('edit-stat4-desc').value
                 };
 
-                await saveSiteData();
+                saveSiteData();
                 renderData();
                 showToast('Home Page Configuration Updated!', 'success');
             };
@@ -1316,30 +1331,29 @@
                 reader.onload = function(evt) { finalizeHomeEdit(evt.target.result); };
                 reader.readAsDataURL(fileInput.files[0]);
             } else {
-                await finalizeHomeEdit(null);
+                finalizeHomeEdit(null);
             }
         }
 
-        async function handleSupportMail(e) {
+        function handleSupportMail(e) {
             e.preventDefault();
-            if(!siteData.messages) siteData.messages = [];
             siteData.messages.push({ 
                 name: document.getElementById('sup-name').value, 
                 email: document.getElementById('sup-email').value, 
                 msg: document.getElementById('sup-msg').value, 
                 time: new Date().toLocaleTimeString() 
             });
-            await saveSiteData();
+            saveSiteData();
             showToast('Sent to Admin!', 'success');
             document.getElementById('support-form').reset();
             document.getElementById('msg-char-counter').innerText = '0 / 500';
             renderMessages();
         }
 
-        async function clearAllMails() {
+        function clearAllMails() {
             if(confirm("Are you sure you want to delete all messages permanently?")) {
                 siteData.messages = [];
-                await saveSiteData();
+                saveSiteData();
                 renderMessages();
                 showToast('All messages deleted!', 'success');
             }
@@ -1384,13 +1398,13 @@
             const finalizePublish = () => {
                 progressContainer.classList.remove('hidden'); submitBtn.disabled = true; submitBtn.innerText = "Uploading...";
                 let progress = 0;
-                const uploadInterval = setInterval(async () => {
+                const uploadInterval = setInterval(() => {
                     progress += 20; progressBar.style.width = progress + '%';
                     if (progress >= 100) {
                         clearInterval(uploadInterval);
                         if(!siteData[dest]) siteData[dest] = [];
                         siteData[dest].push(itemEntry);
-                        await saveSiteData(); 
+                        saveSiteData(); 
                         renderData();
                         showToast(`Uploaded Successfully!`, 'success');
                         document.getElementById('admin-upload-form').reset();
@@ -1442,10 +1456,10 @@
             }
         }
 
-        async function deleteItem(category, index) {
+        function deleteItem(category, index) {
             if (confirm("Delete this item forever?")) {
                 siteData[category].splice(index, 1);
-                await saveSiteData();
+                saveSiteData();
                 renderData();
                 showToast('Deleted!', 'success');
             }
@@ -1467,7 +1481,7 @@
             currentlyViewedAsset = '';
         }
 
-        async function handleReviewSubmit(e) {
+        function handleReviewSubmit(e) {
             e.preventDefault();
             if(!currentUser) return;
             const textContent = document.getElementById('review-text').value;
@@ -1481,7 +1495,7 @@
                 date: 'Just now'
             });
 
-            await saveSiteData();
+            saveSiteData();
             document.getElementById('review-text').value = '';
             showToast('Review posted!', 'success');
             renderReviews();
@@ -1526,8 +1540,8 @@
 
         function renderData() {
             const isAdmin = currentUser && currentUser.role === 'admin';
-            const h = siteData.homeSettings || {};
-            const p = siteData.profile || {};
+            const h = siteData.homeSettings;
+            const p = siteData.profile;
 
             // Header Elements
             document.getElementById('nav-logo').src = p.logo || fallbackMainLogo;
@@ -1551,20 +1565,14 @@
                 document.getElementById('about-link-support').onclick = function(e){ e.preventDefault(); switchTab('support'); };
             }
 
-            // Home Elements with proper default image routing
+            // Home Editor Elements
             document.getElementById('display-home-badge1').innerText = h.badge1 || '';
             document.getElementById('display-home-title1').innerText = h.title1 || '';
             document.getElementById('display-home-title2').innerText = h.title2 || '';
             document.getElementById('display-home-desc').innerText = h.desc || '';
             document.getElementById('display-home-btn').innerText = h.btnText || '';
             document.getElementById('display-home-badge2').innerText = h.badge2 || '';
-            
-            const mainImg = document.getElementById('display-home-img');
-            mainImg.src = h.imgUrl || 'https://images.unsplash.com/photo-1605342417730-10ebcb1a1ab5?w=1200&q=80';
-            mainImg.onerror = function() { 
-                this.onerror=null; 
-                this.src='https://images.unsplash.com/photo-1605342417730-10ebcb1a1ab5?w=1200&q=80'; 
-            };
+            document.getElementById('display-home-img').src = h.imgUrl || 'hero-showcase.png';
 
             document.getElementById('display-stat1-title').innerText = h.stat1Title || '';
             document.getElementById('display-stat1-desc').innerText = h.stat1Desc || '';
