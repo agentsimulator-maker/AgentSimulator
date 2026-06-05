@@ -4,12 +4,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Agent Simulator</title>
+    
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght=400;500;600;700&family=Fredoka:wght=600;700&display=swap" rel="stylesheet">
     
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-
     <script>
         tailwind.config = {
             darkMode: 'class',
@@ -115,15 +116,27 @@
         .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
 
         @keyframes float {
-            0%, 100% { transform: translateY(0px) rotate(0deg); filter: drop-shadow(0 15px 20px rgba(139, 92, 246, 0.15)); }
-            50% { transform: translateY(-16px) rotate(1.5deg); filter: drop-shadow(0 30px 35px rgba(139, 92, 246, 0.35)); }
+            0%, 100% { 
+                transform: translateY(0px) rotate(0deg); 
+                filter: drop-shadow(0 15px 20px rgba(139, 92, 246, 0.15));
+            }
+            50% { 
+                transform: translateY(-16px) rotate(1.5deg); 
+                filter: drop-shadow(0 30px 35px rgba(139, 92, 246, 0.35));
+            }
         }
         .animate-float { animation: float 5s ease-in-out infinite; }
 
         .ambient-glow {
-            position: absolute; width: 250px; height: 250px;
+            position: absolute;
+            width: 250px;
+            height: 250px;
             background: radial-gradient(circle, rgba(139, 92, 246, 0.4) 0%, rgba(139, 92, 246, 0) 70%);
-            top: 20%; right: 10%; z-index: 0; pointer-events: none; filter: blur(40px);
+            top: 20%;
+            right: 10%;
+            z-index: 0;
+            pointer-events: none;
+            filter: blur(40px);
             animation: pulseGlow 8s ease-in-out infinite alternate;
         }
         @keyframes pulseGlow {
@@ -145,23 +158,51 @@
         html.dark .hover-pop:hover { box-shadow: 0 12px 40px rgba(0, 0, 0, 0.5); }
         .tab-content { transition: opacity 0.3s ease-in-out; }
 
-        .text-highlighter { position: relative; z-index: 1; display: inline-block; }
+        .text-highlighter {
+            position: relative;
+            z-index: 1;
+            display: inline-block;
+        }
         .text-highlighter::after {
-            content: ''; position: absolute; bottom: 2px; left: -2px; right: -2px; height: 40%;
-            background: rgba(139, 92, 246, 0.4); z-index: -1; transform: skewX(-15deg); border-radius: 2px;
+            content: '';
+            position: absolute;
+            bottom: 2px;
+            left: -2px;
+            right: -2px;
+            height: 40%;
+            background: rgba(139, 92, 246, 0.4);
+            z-index: -1;
+            transform: skewX(-15deg);
+            border-radius: 2px;
         }
 
         input[type="file"]::file-selector-button {
-            background-color: rgba(255, 255, 255, 0.8); color: #111; border: 1px solid rgba(0,0,0,0.1);
-            padding: 8px 16px; border-radius: 8px; cursor: pointer; font-weight: 600; margin-right: 10px; transition: background 0.2s;
+            background-color: rgba(255, 255, 255, 0.8);
+            color: #111;
+            border: 1px solid rgba(0,0,0,0.1);
+            padding: 8px 16px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            margin-right: 10px;
+            transition: background 0.2s;
         }
-        input[type="file"]::file-selector-button:hover { background-color: rgba(255, 255, 255, 1); }
-        html.dark input[type="file"]::file-selector-button { background-color: #374151; color: #fff; border-color: rgba(255,255,255,0.1); }
-        html.dark input[type="file"]::file-selector-button:hover { background-color: #4b5563; }
+        input[type="file"]::file-selector-button:hover {
+            background-color: rgba(255, 255, 255, 1);
+        }
+        html.dark input[type="file"]::file-selector-button {
+            background-color: #374151;
+            color: #fff;
+            border-color: rgba(255,255,255,0.1);
+        }
+        html.dark input[type="file"]::file-selector-button:hover {
+            background-color: #4b5563;
+        }
 
         #toast {
             transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), opacity 0.3s ease;
-            transform: translateY(100px) scale(0.9); opacity: 0;
+            transform: translateY(100px) scale(0.9);
+            opacity: 0;
         }
         #toast.show { transform: translateY(0) scale(1); opacity: 1; }
 
@@ -446,7 +487,7 @@
                 <h2 class="text-2xl font-bold text-gray-900 dark:text-white mb-2 flex items-center gap-3">
                     <div class="bg-green-100/50 dark:bg-green-950/40 p-2 rounded-lg border border-green-200 text-green-600 shadow-sm"><i class="fa-solid fa-cloud-arrow-up"></i></div> Upload to Website
                 </h2>
-                <p class="text-gray-500 mb-8">Add new assets, awards, or videos to the tabs.</p>
+                <p class="text-gray-500 mb-8">Add new assets, awards, or videos to the tabs. Note: Overly large image files will delay synchronization.</p>
                 
                 <form id="admin-upload-form" onsubmit="handleAdminUpload(event)">
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-5">
@@ -780,11 +821,10 @@
     </button>
 
     <script>
-        // --- SUPABASE INITIALIZATION ---
-        const { createClient } = supabase;
-        const supabaseUrl = 'https://ngoywknktovkkhewsbos.supabase.co';
-        const supabaseKey = 'sb_publishable_70BhPk6LVvMIaKAda72m5w_ygs3bCqQ';
-        const sbClient = createClient(supabaseUrl, supabaseKey);
+        // ======= SUPABASE INITIALIZATION =======
+        const SUPABASE_URL = 'https://ngoywknktovkkhewsbos.supabase.co';
+        const SUPABASE_KEY = 'sb_publishable_70BhPk6LVvMIaKAda72m5w_ygs3bCqQ';
+        const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
         const fallbackMainLogo = "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=150";
 
@@ -845,84 +885,74 @@
 
         window.addEventListener('scroll', () => {
             const topBtn = document.getElementById('btn-back-to-top');
-            if (window.scrollY > 400) topBtn.classList.add('visible');
-            else topBtn.classList.remove('visible');
+            if (window.scrollY > 400) {
+                topBtn.classList.add('visible');
+            } else {
+                topBtn.classList.remove('visible');
+            }
         });
 
         function scrollToTop() {
             window.scrollTo({ top: 0, behavior: 'smooth' });
         }
 
-        // --- DUAL STORAGE SYNC LOGIC ---
+        // ======= DUAL DATA SYNC: LOCALSTORAGE & SUPABASE =======
         async function loadSiteData() {
-            // 1. Load Local Storage for instant visual render
-            const savedData = localStorage.getItem('agentSimSiteData');
-            if(savedData) {
+            // 1. Fetch instantly from LocalStorage for zero-latency UI
+            const localData = localStorage.getItem('agentSimSiteData');
+            const localUsers = localStorage.getItem('agentSimRegisteredUsers');
+            if(localData) {
                 try {
-                    const parsed = JSON.parse(savedData);
+                    const parsed = JSON.parse(localData);
                     if(parsed && parsed.homeSettings) siteData = {...siteData, ...parsed};
                 } catch(e) { console.error("Error parsing local layout configs:", e); }
             }
-            
-            const savedUsers = localStorage.getItem('agentSimRegisteredUsers');
-            if(savedUsers) {
-                try { registeredUsers = JSON.parse(savedUsers); } catch(e) { console.error(e); }
+            if(localUsers) {
+                try { registeredUsers = JSON.parse(localUsers); } catch(e) { console.error(e); }
             }
 
-            // 2. Fetch from Supabase Cloud (Fallback if valid data found)
+            // 2. Fetch fresh global state from Supabase in the background
             try {
-                const { data, error } = await sbClient
-                    .from('app_state')
+                const { data, error } = await supabase
+                    .from('app_storage')
                     .select('*')
-                    .in('id', ['site_data', 'registered_users']);
-                
-                if (data && !error) {
-                    const sbSiteData = data.find(d => d.id === 'site_data');
-                    if (sbSiteData && sbSiteData.payload) {
-                        siteData = { ...siteData, ...sbSiteData.payload };
+                    .eq('id', 1)
+                    .single();
+
+                if (data) {
+                    if (data.site_data) {
+                        siteData = { ...siteData, ...data.site_data };
                         localStorage.setItem('agentSimSiteData', JSON.stringify(siteData));
                     }
-                    
-                    const sbUsers = data.find(d => d.id === 'registered_users');
-                    if (sbUsers && sbUsers.payload) {
-                        registeredUsers = sbUsers.payload;
+                    if (data.registered_users) {
+                        registeredUsers = data.registered_users;
                         localStorage.setItem('agentSimRegisteredUsers', JSON.stringify(registeredUsers));
                     }
-                    // Re-render silently to ensure exact cloud match
-                    renderData(); 
-                } else if (error) {
-                    console.warn("Supabase Fetch Warning (Table might not exist yet):", error.message);
+                } else if (error && error.code === 'PGRST116') {
+                    // Row missing. Attempting to seed initial data.
+                    await supabase.from('app_storage').insert([{ id: 1, site_data: siteData, registered_users: registeredUsers }]);
                 }
-            } catch (err) {
-                console.warn("Supabase connection issue:", err);
+            } catch (e) {
+                console.error("Supabase load error (fallback to local active):", e);
             }
         }
         
         async function saveSiteData() {
-            // Save locally
+            // 1. Save locally for instant UI update
             localStorage.setItem('agentSimSiteData', JSON.stringify(siteData));
-            
-            // Sync to Supabase
-            try {
-                await sbClient.from('app_state').upsert([
-                    { id: 'site_data', payload: siteData }
-                ]);
-            } catch (err) {
-                console.warn("Failed to sync site data to Supabase", err);
-            }
-        }
+            localStorage.setItem('agentSimRegisteredUsers', JSON.stringify(registeredUsers));
 
-        async function saveUsersData() {
-             localStorage.setItem('agentSimRegisteredUsers', JSON.stringify(registeredUsers));
-             try {
-                await sbClient.from('app_state').upsert([
-                    { id: 'registered_users', payload: registeredUsers }
-                ]);
-            } catch (err) {
-                console.warn("Failed to sync users to Supabase", err);
+            // 2. Push state to Supabase Global
+            try {
+                const { error } = await supabase
+                    .from('app_storage')
+                    .upsert({ id: 1, site_data: siteData, registered_users: registeredUsers });
+                
+                if (error) console.error("Supabase sync failed:", error);
+            } catch (e) {
+                console.error("Supabase exception during save:", e);
             }
         }
-        // -------------------------------
 
         window.onload = async () => {
             if (localStorage.getItem('themeMode') === 'light') {
@@ -933,13 +963,21 @@
                 document.getElementById('dark-icon').className = 'fa-solid fa-sun';
             }
 
-            // Kick off dual sync architecture
+            // Wait for data load pipeline
             await loadSiteData();
 
+            // Setup Persistent Login
             const savedUser = localStorage.getItem('agentSimUser');
             if (savedUser) {
                 try {
                     currentUser = JSON.parse(savedUser);
+                    
+                    // Cross-reference to make sure user data is up-to-date with global DB
+                    if(currentUser && currentUser.role !== 'admin') {
+                        const freshUser = registeredUsers.find(u => u.username === currentUser.username);
+                        if(freshUser) currentUser = freshUser;
+                    }
+                    
                     if (currentUser && currentUser.role === 'admin') {
                         document.getElementById('nav-admin').classList.remove('hidden');
                         document.getElementById('nav-admin-mobile').classList.remove('hidden');
@@ -947,6 +985,7 @@
                     updateUserUI();
                 } catch(e) { currentUser = null; }
             }
+            
             renderData();
             populateHomeEditorFields();
             populateProfileEditorFields();
@@ -1047,7 +1086,7 @@
                 const proceedRegistration = (avatarData) => {
                     const newUser = { role: 'user', name: first, username: user, password: pass, img: avatarData, age: age, email: '' };
                     registeredUsers.push(newUser);
-                    saveUsersData(); // Updates both local and Supabase
+                    saveSiteData(); // Fully syncs to Local Storage AND Supabase
                     currentUser = newUser;
                     finalizeLoginSequence(first);
                 };
@@ -1078,7 +1117,7 @@
         }
 
         function finalizeLoginSequence(name) {
-            localStorage.setItem('agentSimUser', JSON.stringify(currentUser)); // Session scope only
+            localStorage.setItem('agentSimUser', JSON.stringify(currentUser));
             document.getElementById('auth-modal').classList.add('hidden');
             document.getElementById('login-form').reset();
             showToast(`Welcome ${name}!`, 'success');
@@ -1118,7 +1157,7 @@
                     const userIndex = registeredUsers.findIndex(u => u.username === currentUser.username);
                     if(userIndex !== -1) {
                         registeredUsers[userIndex] = currentUser;
-                        saveUsersData(); // Updates both local and Supabase
+                        saveSiteData(); // Fully sync changes up to DB
                     }
                 }
                 
@@ -1126,6 +1165,7 @@
                 updateUserUI();
                 closeUserEditModal();
                 showToast('Account Info Updated!', 'success');
+                renderReviews(); // Re-render reviews just in case they are looking at one
             };
             
             if (fileInput.files && fileInput.files.length > 0) {
@@ -1327,7 +1367,6 @@
 
         function handleSupportMail(e) {
             e.preventDefault();
-            if(!siteData.messages) siteData.messages = [];
             siteData.messages.push({ 
                 name: document.getElementById('sup-name').value, 
                 email: document.getElementById('sup-email').value, 
@@ -1414,16 +1453,12 @@
                 itemEntry.video = videoLink;
                 finalizePublish();
             } else {
-                const imgFiles = document.getElementById('upload-img-file').files;
-                const imgElement = imgFiles.length > 0 ? imgFiles[0] : null;
-
+                const imgElement = document.getElementById('upload-img-file').files[0];
                 const processWithImage = (imgSrc) => {
                     itemEntry.img = imgSrc;
                     if (dest === 'studio-assets') {
                         itemEntry.category = document.getElementById('upload-category').value;
-                        const structBinFiles = document.getElementById('upload-binary-file').files;
-                        const structBin = structBinFiles.length > 0 ? structBinFiles[0] : null;
-                        
+                        const structBin = document.getElementById('upload-binary-file').files[0];
                         if (structBin) {
                             const binReader = new FileReader();
                             binReader.onload = function(evt) {
