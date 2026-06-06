@@ -4,17 +4,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Agent Simulator</title>
-    <!-- External Scripts and Fonts -->
+    
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Fredoka:wght@600;700&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     
-    <!-- Link to external CSS -->
-    <link rel="stylesheet" href="styles.css">
-    
     <script>
-        // Tailwind Configuration
         tailwind.config = {
             darkMode: 'class',
             theme: {
@@ -33,6 +29,8 @@
             }
         }
     </script>
+
+    <link rel="stylesheet" href="styles.css">
 </head>
 <body class="min-h-screen flex flex-col relative dark:text-gray-100">
 
@@ -82,7 +80,6 @@
         </div>
     </nav>
 
-    <!-- Drawer Navigation (Mobile) -->
     <div id="mobile-nav-drawer" class="hidden flex-col mx-4 mt-2 p-4 glass-card shadow-md gap-3 md:hidden z-40 font-semibold text-gray-600 dark:text-gray-300 relative">
         <button onclick="switchTab('home'); toggleMobileNav()" class="w-full text-left py-2 px-3 rounded-xl hover:bg-brand-primary/10 flex items-center gap-2"><i class="fa-solid fa-house text-brand-primary w-5"></i>Home</button>
         <button onclick="switchTab('studio-assets'); toggleMobileNav()" class="w-full text-left py-2 px-3 rounded-xl hover:bg-brand-primary/10 flex items-center gap-2"><i class="fa-solid fa-box-open text-brand-primary w-5"></i>Studio Assets</button>
@@ -106,8 +103,7 @@
                     </div>
                     <h1 class="text-5xl md:text-6xl font-extrabold mb-6 leading-tight tracking-tight text-gray-900 dark:text-white">
                         <span id="display-home-title1">Build Epic</span> <br>
-                        <!-- Visual Enhancement: Gradient Text Added Here -->
-                        <span id="display-home-title2" class="bg-clip-text text-transparent bg-gradient-to-r from-brand-primary to-purple-400 drop-shadow-sm">Roblox Games</span>
+                        <span id="display-home-title2" class="text-brand-primary drop-shadow-sm">Roblox Games</span>
                     </h1>
                     <p id="display-home-desc" class="text-gray-700 dark:text-gray-300 mb-8 text-lg leading-relaxed">Download advanced Lua scripts, share your game milestones, watch tutorials, and grow your player base.</p>
                     <div class="flex gap-4">
@@ -220,7 +216,6 @@
             </div>
         </section>
 
-        <!-- Dynamic Content Sections Below (Assets, Achievements, Youtube, etc) -->
         <section id="studio-assets" class="tab-content hidden opacity-0">
             <h2 class="text-3xl font-bold mb-4 flex items-center gap-3 text-gray-900 dark:text-white">
                 <div class="bg-purple-100 dark:bg-purple-950 p-3 rounded-xl border border-purple-200 dark:border-purple-800 text-brand-primary shadow-sm"><i class="fa-solid fa-box-open"></i></div> 
@@ -245,7 +240,6 @@
             <div id="assets-container" class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-16"></div>
         </section>
 
-        <!-- Add remaining sections (achievement, youtube, support, admin) matching your exact structure here to keep your layout identical -->
         <section id="achievement" class="tab-content hidden opacity-0">
             <h2 class="text-3xl font-bold mb-8 flex items-center gap-3 text-gray-900 dark:text-white">
                 <div class="bg-yellow-100 dark:bg-yellow-950 p-3 rounded-xl border border-yellow-200 dark:border-yellow-800 text-yellow-500 shadow-sm"><i class="fa-solid fa-trophy"></i></div> 
@@ -254,56 +248,400 @@
             <div id="achievements-container" class="grid grid-cols-1 md:grid-cols-3 gap-8"></div>
         </section>
 
-        <!-- Ensure Modals are Included -->
-        <div id="auth-modal" class="fixed inset-0 bg-gray-900/80 backdrop-blur-sm hidden z-[100] flex items-center justify-center p-4" onclick="document.getElementById('auth-modal').classList.add('hidden')">
-            <div class="glass-card p-8 w-full max-w-md relative pop-in max-h-[90vh] overflow-y-auto no-scrollbar" onclick="event.stopPropagation()">
-                <button onclick="document.getElementById('auth-modal').classList.add('hidden')" aria-label="Close" class="absolute top-4 right-4 text-gray-400 hover:text-gray-900 dark:hover:text-white transition text-xl bg-white/50 dark:bg-slate-800 w-8 h-8 rounded-full flex items-center justify-center"><i class="fa-solid fa-xmark"></i></button>
-                <h2 id="auth-title" class="text-2xl font-bold mb-6 text-center text-gray-900 dark:text-white">Login</h2>
-                <form id="login-form" onsubmit="handleLogin(event)">
-                    <div id="standard-fields" class="hidden space-y-3 mb-4 p-4 bg-white/40 dark:bg-slate-800/40 rounded-xl border border-white/60 dark:border-slate-700">
-                        <div>
-                            <label class="block font-semibold text-sm mb-1 text-gray-700 dark:text-gray-300">Display Name</label>
-                            <input type="text" id="reg-first" placeholder="Your Name" class="w-full input-glass p-3">
+        <section id="youtube" class="tab-content hidden opacity-0">
+            <h2 class="text-3xl font-bold mb-8 flex items-center gap-3 text-gray-900 dark:text-white">
+                <div class="bg-red-100 dark:bg-red-950 p-3 rounded-xl border border-red-200 dark:border-red-800 text-red-500 shadow-sm"><i class="fa-brands fa-youtube"></i></div> 
+                YouTube Video Tutorials
+            </h2>
+            <div id="youtube-container" class="grid grid-cols-1 md:grid-cols-2 gap-8"></div>
+        </section>
+
+        <section id="support" class="tab-content hidden opacity-0">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-12">
+                <div class="pop-in delay-1">
+                    <h2 class="text-3xl font-bold mb-4 text-gray-900 dark:text-white">Contact Admin</h2>
+                    <p class="text-gray-600 dark:text-gray-400 mb-8 text-lg">Found a bug in a script? Want to suggest a new feature? Send a message directly to the admin.</p>
+                    
+                    <a href="https://discord.com/invite/8BGb8jFKn7" target="_blank" class="glass-card p-6 flex items-center gap-6 hover-pop block border-[#5865F2]/30">
+                        <div class="w-14 h-14 bg-[#5865F2]/10 border border-[#5865F2]/30 rounded-2xl flex items-center justify-center text-[#5865F2] text-2xl shadow-sm">
+                            <i class="fa-brands fa-discord"></i>
                         </div>
                         <div>
-                            <label class="block font-semibold text-sm mb-1 text-gray-700 dark:text-gray-300">Your Age</label>
-                            <input type="number" id="reg-age" placeholder="e.g. 15" min="1" class="w-full input-glass p-3">
+                            <h4 class="font-bold text-xl text-gray-900 dark:text-white">Join Discord</h4>
+                            <p class="text-gray-500 dark:text-gray-400 font-medium">Click to connect with the community!</p>
                         </div>
+                    </a>
+                </div>
+                
+                <div class="glass-card p-8 pop-in delay-2">
+                    <form id="support-form" onsubmit="handleSupportMail(event)">
+                        <div class="mb-5">
+                            <label class="block text-sm font-semibold mb-2 text-gray-700 dark:text-gray-300">Username / Name</label>
+                            <input type="text" id="sup-name" class="w-full input-glass p-3" required placeholder="Enter name">
+                        </div>
+                        <div class="mb-5">
+                            <label class="block text-sm font-semibold mb-2 text-gray-700 dark:text-gray-300">Email Address</label>
+                            <input type="email" id="sup-email" class="w-full input-glass p-3" required placeholder="name@example.com">
+                        </div>
+                        <div class="mb-6 relative">
+                            <div class="flex justify-between items-center mb-2">
+                                <label class="block text-sm font-semibold text-gray-700 dark:text-gray-300">Your Message</label>
+                                <span id="msg-char-counter" class="text-xs text-gray-400 font-medium">0 / 500</span>
+                            </div>
+                            <textarea id="sup-msg" rows="4" maxlength="500" oninput="updateCharCounter('sup-msg', 'msg-char-counter', 500)" class="w-full input-glass p-3" required placeholder="Type details here..."></textarea>
+                        </div>
+                        <button type="submit" class="w-full btn-cartoon py-3 text-lg">Send Message!</button>
+                    </form>
+                </div>
+            </div>
+        </section>
+
+        <section id="admin" class="tab-content hidden opacity-0">
+            <div class="flex gap-3 mb-8 glass-card p-3 overflow-x-auto no-scrollbar">
+                <button onclick="toggleAdminPanel('upload')" id="btn-admin-upload" class="font-bold text-white bg-green-500 rounded-xl px-5 py-2 shadow-sm transition whitespace-nowrap">Upload Content</button>
+                <button onclick="toggleAdminPanel('edit-home')" id="btn-admin-edit" class="font-bold text-gray-600 dark:text-gray-300 hover:text-gray-900 hover:bg-white/50 rounded-xl px-5 py-2 transition whitespace-nowrap">Edit Home Page</button>
+                <button onclick="toggleAdminPanel('edit-profile')" id="btn-admin-profile" class="font-bold text-gray-600 dark:text-gray-300 hover:text-gray-900 hover:bg-white/50 rounded-xl px-5 py-2 transition whitespace-nowrap">Edit Profile & About</button>
+                <button onclick="toggleAdminPanel('inbox')" id="btn-admin-inbox" class="font-bold text-gray-600 dark:text-gray-300 hover:text-gray-900 hover:bg-white/50 rounded-xl px-5 py-2 transition whitespace-nowrap">Support Inbox</button>
+            </div>
+
+            <div id="admin-upload-section" class="glass-card p-8 pop-in block">
+                <h2 class="text-2xl font-bold text-gray-900 dark:text-white mb-2 flex items-center gap-3">
+                    <div class="bg-green-100/50 dark:bg-green-950/40 p-2 rounded-lg border border-green-200 text-green-600 shadow-sm"><i class="fa-solid fa-cloud-arrow-up"></i></div> Upload to Website
+                </h2>
+                <p class="text-gray-500 mb-8">Add new assets, awards, or videos to the tabs.</p>
+                
+                <form id="admin-upload-form" onsubmit="handleAdminUpload(event)">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-5">
                         <div>
-                            <label class="block font-semibold text-sm mb-1 text-gray-700 dark:text-gray-300">Profile Picture</label>
-                            <input type="file" id="reg-pic-file" accept="image/*" class="w-full input-glass p-2 text-sm">
+                            <label class="block font-semibold mb-2 text-gray-700 dark:text-gray-300 text-sm">Upload Destination</label>
+                            <select id="upload-dest" onchange="adjustAdminFormView()" class="w-full input-glass p-3 cursor-pointer">
+                                <option value="studio-assets">Studio Assets Tab</option>
+                                <option value="achievement">Achievement Tab</option>
+                                <option value="youtube">YouTube Tab</option>
+                            </select>
+                        </div>
+                        <div id="field-category">
+                            <label class="block font-semibold mb-2 text-gray-700 dark:text-gray-300 text-sm">Asset Category</label>
+                            <select id="upload-category" class="w-full input-glass p-3 cursor-pointer">
+                                <option value="Template">Template</option>
+                                <option value="Asset">Asset</option>
+                                <option value="Icon">Icon</option>
+                            </select>
                         </div>
                     </div>
-    
-                    <div class="space-y-3 mb-6">
-                        <div>
-                            <label class="block font-semibold text-sm mb-1 text-gray-700 dark:text-gray-300">Username</label>
-                            <input type="text" id="auth-user" placeholder="Enter username" class="w-full input-glass p-3" required>
+                    
+                    <div class="mb-5">
+                        <label class="block font-semibold mb-2 text-gray-700 dark:text-gray-300 text-sm">Item Title</label>
+                        <input type="text" id="upload-title" class="w-full input-glass p-3" required placeholder="Enter asset title">
+                    </div>
+                    <div class="mb-6">
+                        <label class="block font-semibold mb-2 text-gray-700 dark:text-gray-300 text-sm">Description</label>
+                        <input type="text" id="upload-desc" class="w-full input-glass p-3" required placeholder="Brief detail text">
+                    </div>
+
+                    <div class="p-6 bg-white/40 dark:bg-slate-800/40 border border-white/60 dark:border-slate-700 rounded-xl mb-8 space-y-5 shadow-inner">
+                        <h4 class="font-bold text-gray-800 dark:text-gray-200 border-b border-gray-200/50 pb-2"><i class="fa-solid fa-photo-film mr-1 text-purple-400"></i> Media & Files</h4>
+                        <div id="field-image-file" class="pop-in delay-1">
+                            <label class="block font-semibold mb-2 text-gray-700 dark:text-gray-300 text-sm">Upload Display Image</label>
+                            <input type="file" id="upload-img-file" accept="image/*" class="w-full input-glass p-2">
+                        </div>
+                        <div id="field-download-file" class="pop-in delay-2">
+                            <label class="block font-semibold mb-2 text-gray-700 dark:text-gray-300 text-sm">Upload File for Players (.zip, .lua)</label>
+                            <input type="file" id="upload-binary-file" class="w-full input-glass p-2">
+                        </div>
+                        <div id="field-video-link" class="hidden pop-in delay-1">
+                            <label class="block font-semibold text-red-500 mb-2 text-sm"><i class="fa-brands fa-youtube"></i> YouTube Video Link</label>
+                            <input type="url" id="upload-video" placeholder="https://youtube.com/watch?v=..." class="w-full input-glass p-3">
+                        </div>
+                    </div>
+
+                    <div id="upload-progress-container" class="hidden w-full bg-white/50 dark:bg-slate-800/50 border border-white/60 dark:border-slate-700 rounded-full h-5 mb-6 p-1 shadow-inner overflow-hidden">
+                        <div id="upload-progress-bar" class="bg-gradient-to-r from-green-400 to-green-600 h-full rounded-full w-0 transition-all duration-300 shadow-sm"></div>
+                    </div>
+
+                    <button type="submit" id="admin-submit-btn" class="w-full btn-cartoon bg-green-500 hover:bg-green-400 py-3 text-lg">
+                        Publish Content!
+                    </button>
+                </form>
+            </div>
+
+            <div id="admin-edit-home-section" class="hidden glass-card p-8 pop-in">
+                <h2 class="text-2xl font-bold text-gray-900 dark:text-white mb-2 flex items-center gap-3">
+                    <div class="bg-purple-100/50 dark:bg-purple-950/40 p-2 rounded-lg border border-purple-200 text-brand-primary shadow-sm"><i class="fa-solid fa-pen-to-square"></i></div> Edit Home Page Elements
+                </h2>
+                <p class="text-gray-500 mb-6 text-sm">Modify titles, descriptions, branding visuals, badge elements, and statistics grids.</p>
+                
+                <form id="edit-home-form" onsubmit="handleHomeEdit(event)">
+                    <div class="p-5 bg-purple-50/60 dark:bg-purple-950/20 border border-purple-200 dark:border-purple-900 rounded-xl mb-6 shadow-inner">
+                        <h4 class="font-bold text-brand-primary border-b border-purple-200 dark:border-purple-800 pb-2 mb-4"><i class="fa-solid fa-tags"></i> Hero Branding & Accents</h4>
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
+                            <div>
+                                <label class="block font-semibold mb-2 text-gray-700 dark:text-gray-300 text-sm">Top Star Badge</label>
+                                <input type="text" id="edit-badge1" class="w-full input-glass p-2">
+                            </div>
+                            <div>
+                                <label class="block font-semibold mb-2 text-gray-700 dark:text-gray-300 text-sm">Image Corner Badge</label>
+                                <input type="text" id="edit-badge2" class="w-full input-glass p-2">
+                            </div>
+                            <div>
+                                <label class="block font-semibold mb-2 text-gray-700 dark:text-gray-300 text-sm">Main Button Text</label>
+                                <input type="text" id="edit-btn-text" class="w-full input-glass p-2">
+                            </div>
                         </div>
                         <div>
-                            <label class="block font-semibold text-sm mb-1 text-gray-700 dark:text-gray-300">Password</label>
-                            <div class="relative">
-                                <input type="password" id="auth-pass" placeholder="Enter password" class="w-full input-glass p-3 pr-10" required>
-                                <button type="button" aria-label="Toggle Password Visibility" onclick="togglePasswordReveal('auth-pass', 'pass-eye-icon')" class="absolute right-3 top-3.5 text-gray-400 hover:text-brand-primary transition">
-                                    <i id="pass-eye-icon" class="fa-solid fa-eye"></i>
-                                </button>
+                            <label class="block font-semibold mb-2 text-gray-700 dark:text-gray-300 text-sm">Hero Showcase Image (Upload Local File)</label>
+                            <input type="file" id="edit-home-img-file" accept="image/*" class="w-full input-glass p-2 text-sm">
+                        </div>
+                    </div>
+
+                    <div class="p-5 bg-slate-50/60 dark:bg-slate-900/40 border border-slate-200 dark:border-slate-800 rounded-xl mb-6 shadow-inner">
+                        <h4 class="font-bold text-gray-800 dark:text-gray-200 border-b border-gray-200 dark:border-gray-700 pb-2 mb-4"><i class="fa-solid fa-heading"></i> Headers & Descriptions</h4>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-5 mb-4">
+                            <div>
+                                <label class="block font-semibold mb-2 text-gray-700 dark:text-gray-300 text-sm">Top Title Line</label>
+                                <input type="text" id="edit-title1" class="w-full input-glass p-3">
+                            </div>
+                            <div>
+                                <label class="block font-semibold mb-2 text-gray-700 dark:text-gray-300 text-sm">Bottom Title Line (Colored)</label>
+                                <input type="text" id="edit-title2" class="w-full input-glass p-3">
+                            </div>
+                        </div>
+                        <div class="mb-4">
+                            <label class="block font-semibold mb-2 text-gray-700 dark:text-gray-300 text-sm">Paragraph Description</label>
+                            <textarea id="edit-desc" rows="2" class="w-full input-glass p-3"></textarea>
+                        </div>
+                    </div>
+
+                    <div class="p-5 bg-blue-50/60 dark:bg-blue-950/20 border border-blue-200 dark:border-blue-900 rounded-xl mb-8 shadow-inner">
+                        <h4 class="font-bold text-blue-500 border-b border-blue-200 dark:border-blue-800 pb-2 mb-4"><i class="fa-solid fa-chart-simple"></i> System Metrics & Counters</h4>
+                        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
+                            <div class="p-3 bg-white/40 dark:bg-slate-800/40 border border-white/60 dark:border-slate-700 rounded-xl">
+                                <span class="text-xs font-bold uppercase text-purple-500 mb-2 block">Stat Box 1</span>
+                                <input type="text" id="edit-stat1-title" placeholder="Value (10M+)" class="w-full input-glass p-2 mb-2 text-sm">
+                                <input type="text" id="edit-stat1-desc" placeholder="Label (Place Visits)" class="w-full input-glass p-2 text-sm">
+                            </div>
+                            <div class="p-3 bg-white/40 dark:bg-slate-800/40 border border-white/60 dark:border-slate-700 rounded-xl">
+                                <span class="text-xs font-bold uppercase text-blue-500 mb-2 block">Stat Box 2</span>
+                                <input type="text" id="edit-stat2-title" placeholder="Value (50K+)" class="w-full input-glass p-2 mb-2 text-sm">
+                                <input type="text" id="edit-stat2-desc" placeholder="Label (Active Players)" class="w-full input-glass p-2 text-sm">
+                            </div>
+                            <div class="p-3 bg-white/40 dark:bg-slate-800/40 border border-white/60 dark:border-slate-700 rounded-xl">
+                                <span class="text-xs font-bold uppercase text-green-500 mb-2 block">Stat Box 3</span>
+                                <input type="text" id="edit-stat3-title" placeholder="Value (1,200+)" class="w-full input-glass p-2 mb-2 text-sm">
+                                <input type="text" id="edit-stat3-desc" placeholder="Label (Lua Scripts)" class="w-full input-glass p-2 text-sm">
+                            </div>
+                            <div class="p-3 bg-white/40 dark:bg-slate-800/40 border border-white/60 dark:border-slate-700 rounded-xl">
+                                <span class="text-xs font-bold uppercase text-red-500 mb-2 block">Stat Box 4</span>
+                                <input type="text" id="edit-stat4-title" placeholder="Value (200K+)" class="w-full input-glass p-2 mb-2 text-sm">
+                                <input type="text" id="edit-stat4-desc" placeholder="Label (Subscribers)" class="w-full input-glass p-2 text-sm">
                             </div>
                         </div>
                     </div>
-                    
-                    <button type="submit" id="auth-btn" class="w-full btn-cartoon py-3 text-lg mb-4">Login</button>
-                    
-                    <div class="flex justify-between font-medium text-sm text-gray-600 dark:text-gray-400 px-1">
-                        <span onclick="toggleReg()" id="toggle-reg-text" class="hover:text-brand-primary cursor-pointer transition font-bold text-brand-primary">Create new account</span>
-                        <span onclick="showToast('Ask the admin on Discord!', 'error')" class="hover:text-brand-primary cursor-pointer transition">Forgot?</span>
-                    </div>
+
+                    <button type="submit" class="w-full btn-cartoon bg-brand-primary hover:bg-brand-primaryHover py-3 text-lg">
+                        <i class="fa-solid fa-floppy-disk mr-2"></i> Save Home Page!
+                    </button>
                 </form>
             </div>
-        </div>
+
+            <div id="admin-edit-profile-section" class="hidden glass-card p-8 pop-in">
+                <h2 class="text-2xl font-bold text-gray-900 dark:text-white mb-2 flex items-center gap-3">
+                    <div class="bg-amber-100/50 dark:bg-amber-950/40 p-2 rounded-lg border border-amber-200 text-amber-500 shadow-sm"><i class="fa-solid fa-id-card"></i></div> Edit Global Profile Info
+                </h2>
+                <p class="text-gray-500 mb-6 text-sm">Update the primary developer details, About Me descriptions, and social URLs across the site.</p>
+
+                <form id="edit-profile-form" onsubmit="handleProfileEdit(event)">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 bg-white/40 dark:bg-slate-800/40 p-6 rounded-2xl border border-white/60 dark:border-slate-700 mb-6">
+                        <div>
+                            <label class="block font-semibold mb-2 text-gray-700 dark:text-gray-300 text-sm">Display Name</label>
+                            <input type="text" id="edit-profile-name" class="w-full input-glass p-3">
+                        </div>
+                        <div>
+                            <label class="block font-semibold mb-2 text-gray-700 dark:text-gray-300 text-sm">Profile Logo (Upload Local Image)</label>
+                            <input type="file" id="edit-profile-logo-file" accept="image/*" class="w-full input-glass p-2 text-sm">
+                        </div>
+                        <div>
+                            <label class="block font-semibold mb-2 text-gray-700 dark:text-gray-300 text-sm">Age</label>
+                            <input type="number" id="edit-profile-age" class="w-full input-glass p-3">
+                        </div>
+                        <div>
+                            <label class="block font-semibold mb-2 text-gray-700 dark:text-gray-300 text-sm">Email Address</label>
+                            <input type="email" id="edit-profile-email" class="w-full input-glass p-3">
+                        </div>
+                    </div>
+
+                    <div class="bg-white/40 dark:bg-slate-800/40 p-6 rounded-2xl border border-white/60 dark:border-slate-700 mb-6 space-y-5">
+                        <div>
+                            <label class="block font-semibold mb-2 text-gray-700 dark:text-gray-300 text-sm">About Me Description</label>
+                            <textarea id="edit-profile-desc" rows="3" class="w-full input-glass p-3 resize-none"></textarea>
+                        </div>
+                        <div>
+                            <label class="block font-semibold mb-2 text-brand-primary text-sm">Highlighted Inspired Line</label>
+                            <input type="text" id="edit-profile-inspired" class="w-full input-glass p-3">
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 bg-white/40 dark:bg-slate-800/40 p-6 rounded-2xl border border-white/60 dark:border-slate-700 mb-8">
+                        <div>
+                            <label class="block font-semibold mb-2 text-[#5865F2] text-sm"><i class="fa-brands fa-discord"></i> Discord URL</label>
+                            <input type="url" id="edit-profile-discord" class="w-full input-glass p-3">
+                        </div>
+                        <div>
+                            <label class="block font-semibold mb-2 text-[#FF0000] text-sm"><i class="fa-brands fa-youtube"></i> YouTube URL</label>
+                            <input type="url" id="edit-profile-youtube" class="w-full input-glass p-3">
+                        </div>
+                        <div>
+                            <label class="block font-semibold mb-2 text-green-500 text-sm"><i class="fa-solid fa-headset"></i> Support URL</label>
+                            <input type="url" id="edit-profile-support" class="w-full input-glass p-3">
+                        </div>
+                    </div>
+
+                    <button type="submit" class="w-full btn-cartoon bg-amber-500 hover:bg-amber-400 py-3 text-lg">
+                        <i class="fa-solid fa-floppy-disk mr-2"></i> Save Profile Settings!
+                    </button>
+                </form>
+            </div>
+
+            <div id="admin-inbox-section" class="hidden glass-card p-8 pop-in">
+                <div class="flex justify-between items-center mb-6 border-b border-gray-200 dark:border-gray-700 pb-4">
+                    <h2 class="text-2xl font-bold text-gray-900 dark:text-white flex items-center gap-3">
+                        <div class="bg-blue-100/50 dark:bg-blue-950/40 p-2 rounded-lg border border-blue-200 text-blue-500 shadow-sm"><i class="fa-solid fa-envelope-open-text"></i></div> Player Mail
+                    </h2>
+                    <button onclick="clearAllMails()" class="bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded-xl shadow-sm text-sm transition flex items-center gap-2">
+                        <i class="fa-solid fa-trash-can"></i> Delete All
+                    </button>
+                </div>
+                
+                <div id="admin-messages-container" class="space-y-5">
+                    <p class="font-medium text-gray-500 text-center py-8">Inbox is empty!</p>
+                </div>
+            </div>
+        </section>
 
     </main>
 
-    <!-- Load JavaScript -->
+    <div id="fullscreen-overlay" class="fixed inset-0 bg-black/90 backdrop-blur-md hidden z-[200] flex flex-col justify-center items-center p-4 sm:p-6" onclick="closeAssetView()">
+        <div class="bg-white dark:bg-[#111827] w-full max-w-4xl h-full max-h-[90vh] rounded-2xl shadow-2xl overflow-y-auto no-scrollbar relative flex flex-col border border-gray-200 dark:border-gray-700 pop-in" onclick="event.stopPropagation()">
+            <button onclick="closeAssetView()" aria-label="Close View" class="absolute top-4 right-4 text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white transition text-2xl z-10 w-10 h-10 bg-white/50 dark:bg-slate-800/80 rounded-full flex items-center justify-center backdrop-blur-sm"><i class="fa-solid fa-xmark"></i></button>
+            
+            <div class="p-6 sm:p-10">
+                <div class="flex flex-col items-center border-b border-gray-200 dark:border-gray-700 pb-8 mb-8">
+                    <span id="fullscreen-category" class="px-3 py-1 bg-brand-primary/10 text-brand-primary border border-brand-primary/20 rounded-full text-xs font-bold uppercase tracking-wider mb-4">Category</span>
+                    <img id="fullscreen-image" src="" alt="Fullscreen asset preview" class="w-full max-h-[50vh] rounded-xl object-cover shadow-lg mb-6 bg-gray-100 dark:bg-black/50">
+                    <div class="text-center w-full">
+                        <h3 id="fullscreen-title" class="text-3xl font-cartoon font-bold text-gray-900 dark:text-white mb-3">Asset Title</h3>
+                        <p id="fullscreen-desc" class="text-gray-600 dark:text-gray-300 font-medium text-lg leading-relaxed max-w-2xl mx-auto">Asset Description Context</p>
+                    </div>
+                </div>
+                
+                <div>
+                    <h3 class="text-2xl font-bold text-gray-900 dark:text-white mb-2 flex items-center gap-2">
+                        <i class="fa-solid fa-comments text-brand-primary"></i> Experience Reviews
+                    </h3>
+                    <p class="text-gray-500 dark:text-gray-400 mb-6 text-sm">See what other developers think or share your execution feedback for this specific asset.</p>
+
+                    <div id="review-auth-block" class="mb-8 p-4 bg-amber-50 dark:bg-amber-950/30 border border-amber-200 dark:border-amber-900 rounded-xl text-amber-800 dark:text-amber-300 font-medium text-sm flex items-center gap-3">
+                        <i class="fa-solid fa-lock text-base animate-pulse"></i> You must be logged into your account to submit asset reviews.
+                    </div>
+
+                    <form id="review-form" class="hidden space-y-4 mb-8 bg-gray-50 dark:bg-slate-800/50 p-5 rounded-xl border border-gray-100 dark:border-gray-700" onsubmit="handleReviewSubmit(event)">
+                        <div>
+                            <label class="block font-semibold mb-2 text-sm text-gray-700 dark:text-gray-300">Your Feedback</label>
+                            <textarea id="review-text" rows="3" placeholder="Write your testing experience here..." class="w-full input-glass p-4" required></textarea>
+                        </div>
+                        <button type="submit" class="btn-cartoon px-6 py-2 text-sm"><i class="fa-solid fa-paper-plane mr-1"></i> Post Review</button>
+                    </form>
+
+                    <div id="reviews-display-stack" class="space-y-4 pt-2"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="account-modal" class="fixed inset-0 bg-gray-900/80 backdrop-blur-sm hidden z-[110] flex items-center justify-center p-4" onclick="document.getElementById('account-modal').classList.add('hidden')">
+        <div class="glass-card p-8 w-full max-w-md relative pop-in max-h-[90vh] overflow-y-auto no-scrollbar" onclick="event.stopPropagation()">
+            <button onclick="document.getElementById('account-modal').classList.add('hidden')" aria-label="Close" class="absolute top-4 right-4 text-gray-400 hover:text-gray-900 dark:hover:text-white transition text-xl bg-white/50 dark:bg-slate-800 w-8 h-8 rounded-full flex items-center justify-center"><i class="fa-solid fa-xmark"></i></button>
+            <h2 class="text-2xl font-bold mb-6 text-center text-gray-900 dark:text-white font-cartoon">Edit Personal Account</h2>
+            <p class="text-sm text-center text-gray-500 dark:text-gray-400 mb-6">Update your personal login profile details. (Local File Picture Upload)</p>
+            <form id="account-edit-form" onsubmit="handleAccountUpdate(event)">
+                <div class="space-y-4 mb-6">
+                    <div>
+                        <label class="block font-semibold text-sm mb-1 text-gray-700 dark:text-gray-300">Display Name</label>
+                        <input type="text" id="acc-display-name" class="w-full input-glass p-3" required>
+                    </div>
+                    <div>
+                        <label class="block font-semibold text-sm mb-1 text-gray-700 dark:text-gray-300">Upload Profile Logo</label>
+                        <input type="file" id="acc-logo-file" accept="image/*" class="w-full input-glass p-2 text-sm">
+                    </div>
+                    <div>
+                        <label class="block font-semibold text-sm mb-1 text-gray-700 dark:text-gray-300">Age</label>
+                        <input type="number" id="acc-age" class="w-full input-glass p-3" required>
+                    </div>
+                    <div>
+                        <label class="block font-semibold text-sm mb-1 text-gray-700 dark:text-gray-300">Email Address</label>
+                        <input type="email" id="acc-email" class="w-full input-glass p-3" required>
+                    </div>
+                </div>
+                <button type="submit" class="w-full btn-cartoon py-3 text-lg">Save Changes</button>
+            </form>
+        </div>
+    </div>
+
+    <div id="toast" class="fixed bottom-10 right-10 px-5 py-3 rounded-xl shadow-lg font-semibold flex items-center gap-3 z-[300] bg-white dark:bg-slate-800 border border-gray-200 dark:border-gray-700 opacity-0 transform translate-y-10 transition-all duration-300">
+        <i id="toast-icon"></i>
+        <span id="toast-msg" class="text-gray-900 dark:text-white"></span>
+    </div>
+
+    <div id="auth-modal" class="fixed inset-0 bg-gray-900/80 backdrop-blur-sm hidden z-[100] flex items-center justify-center p-4" onclick="document.getElementById('auth-modal').classList.add('hidden')">
+        <div class="glass-card p-8 w-full max-w-md relative pop-in max-h-[90vh] overflow-y-auto no-scrollbar" onclick="event.stopPropagation()">
+            <button onclick="document.getElementById('auth-modal').classList.add('hidden')" aria-label="Close" class="absolute top-4 right-4 text-gray-400 hover:text-gray-900 dark:hover:text-white transition text-xl bg-white/50 dark:bg-slate-800 w-8 h-8 rounded-full flex items-center justify-center"><i class="fa-solid fa-xmark"></i></button>
+            <h2 id="auth-title" class="text-2xl font-bold mb-6 text-center text-gray-900 dark:text-white">Login</h2>
+            <form id="login-form" onsubmit="handleLogin(event)">
+                <div id="standard-fields" class="hidden space-y-3 mb-4 p-4 bg-white/40 dark:bg-slate-800/40 rounded-xl border border-white/60 dark:border-slate-700">
+                    <div>
+                        <label class="block font-semibold text-sm mb-1 text-gray-700 dark:text-gray-300">Display Name</label>
+                        <input type="text" id="reg-first" placeholder="Your Name" class="w-full input-glass p-3">
+                    </div>
+                    <div>
+                        <label class="block font-semibold text-sm mb-1 text-gray-700 dark:text-gray-300">Your Age</label>
+                        <input type="number" id="reg-age" placeholder="e.g. 15" min="1" class="w-full input-glass p-3">
+                    </div>
+                    <div>
+                        <label class="block font-semibold text-sm mb-1 text-gray-700 dark:text-gray-300">Profile Picture</label>
+                        <input type="file" id="reg-pic-file" accept="image/*" class="w-full input-glass p-2 text-sm">
+                    </div>
+                </div>
+
+                <div class="space-y-3 mb-6">
+                    <div>
+                        <label class="block font-semibold text-sm mb-1 text-gray-700 dark:text-gray-300">Username</label>
+                        <input type="text" id="auth-user" placeholder="Enter username" class="w-full input-glass p-3" required>
+                    </div>
+                    <div>
+                        <label class="block font-semibold text-sm mb-1 text-gray-700 dark:text-gray-300">Password</label>
+                        <div class="relative">
+                            <input type="password" id="auth-pass" placeholder="Enter password" class="w-full input-glass p-3 pr-10" required>
+                            <button type="button" aria-label="Toggle Password Visibility" onclick="togglePasswordReveal('auth-pass', 'pass-eye-icon')" class="absolute right-3 top-3.5 text-gray-400 hover:text-brand-primary transition">
+                                <i id="pass-eye-icon" class="fa-solid fa-eye"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                
+                <button type="submit" id="auth-btn" class="w-full btn-cartoon py-3 text-lg mb-4">Login</button>
+                
+                <div class="flex justify-between font-medium text-sm text-gray-600 dark:text-gray-400 px-1">
+                    <span onclick="toggleReg()" id="toggle-reg-text" class="hover:text-brand-primary cursor-pointer transition font-bold text-brand-primary">Create new account</span>
+                    <span onclick="showToast('Ask the admin on Discord!', 'error')" class="hover:text-brand-primary cursor-pointer transition">Forgot?</span>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <button id="btn-back-to-top" aria-label="Back to top" onclick="scrollToTop()" class="btn-cartoon w-12 h-12 flex items-center justify-center shadow-lg transform hover:-translate-y-1 transition" title="Back to Top">
+        <i class="fa-solid fa-arrow-up text-lg"></i>
+    </button>
+
     <script src="script.js" defer></script>
 </body>
 </html>
