@@ -217,7 +217,7 @@
         <div id="profile-dropdown" class="hidden absolute right-4 top-20 w-72 glass-card p-5 shadow-xl border border-gray-200 dark:border-gray-800 z-50 pop-in">
             <h4 class="font-cartoon text-lg text-gray-900 dark:text-white border-b border-gray-200 dark:border-gray-700 pb-2 mb-3">Profile Settings</h4>
             <div class="space-y-2 mb-4">
-                <button onclick="openUserEditModal()" class="w-full text-left font-semibold text-sm text-gray-700 dark:text-gray-300 hover:bg-brand-primary/10 p-2 rounded-lg transition"><i class="fa-solid fa-user-pen mr-2 text-brand-primary"></i> Edit Account Info</button>
+                <button onclick="openAccountModal()" class="w-full text-left font-semibold text-sm text-gray-700 dark:text-gray-300 hover:bg-brand-primary/10 p-2 rounded-lg transition"><i class="fa-solid fa-user-pen mr-2 text-brand-primary"></i> Edit Account Info</button>
                 <button onclick="showToast('Preferences updated.', 'success')" class="w-full text-left font-semibold text-sm text-gray-700 dark:text-gray-300 hover:bg-brand-primary/10 p-2 rounded-lg transition"><i class="fa-solid fa-sliders mr-2 text-brand-primary"></i> Preferences</button>
             </div>
             <div id="logout-btn-container" class="hidden">
@@ -371,6 +371,13 @@
             </h2>
             <p class="text-gray-600 dark:text-gray-400 mb-6">Click on any asset card to preview it full-screen and see community reviews.</p>
             
+            <div class="mb-6 max-w-md">
+                <div class="relative">
+                    <input type="text" id="asset-search-input" oninput="renderData()" placeholder="Search assets by title or details..." class="w-full input-glass p-3 pl-10 text-sm">
+                    <i class="fa-solid fa-magnifying-glass absolute left-3.5 top-3.5 text-gray-400"></i>
+                </div>
+            </div>
+
             <div class="flex gap-3 mb-8 overflow-x-auto no-scrollbar pb-2">
                 <button onclick="setAssetFilter('All')" id="filter-All" class="asset-filter-btn px-5 py-2 rounded-xl font-bold bg-brand-primary text-white shadow-sm transition">All Items</button>
                 <button onclick="setAssetFilter('Template')" id="filter-Template" class="asset-filter-btn px-5 py-2 rounded-xl font-bold bg-white/50 dark:bg-slate-800 text-gray-600 dark:text-gray-300 hover:bg-white/80 dark:hover:bg-slate-700 shadow-sm transition">Templates</button>
@@ -1018,7 +1025,6 @@
 
         function handleLogin(e) {
             e.preventDefault();
-            // QoL improvement: trim whitespace to avoid accidental invisible spaces
             const user = document.getElementById('auth-user').value.trim();
             const pass = document.getElementById('auth-pass').value.trim();
 
@@ -1083,7 +1089,6 @@
             document.getElementById('profile-dropdown').classList.add('hidden');
         });
 
-        // Global keydown listner for accessibility to close modals
         document.addEventListener('keydown', (e) => {
             if(e.key === 'Escape') {
                 closeAssetView();
@@ -1157,7 +1162,7 @@
                 <div class="flex items-center gap-2 select-none w-full md:w-auto">
                     <div onclick="toggleProfileMenu(event)" class="w-full flex items-center justify-between gap-3 bg-white/40 dark:bg-slate-800/40 backdrop-blur-md border border-white/60 dark:border-slate-700 shadow-sm px-4 py-2 rounded-2xl hover-pop cursor-pointer pop-in">
                         <div class="flex items-center gap-3">
-                            <img src="${activeImg}" class="w-10 h-10 rounded-full object-cover border-2 border-white dark:border-slate-600 shadow-sm">
+                            <img src="${activeImg}" class="w-10 h-10 rounded-full object-cover border-2 border-white dark:border-slate-600 shadow-sm" onerror="this.src='${fallbackMainLogo}'">
                             <div class="flex flex-col text-left">
                                 <span class="font-bold text-sm text-gray-900 dark:text-white leading-tight">${activeName}</span>
                                 <span class="text-xs font-medium text-gray-500 dark:text-gray-400 leading-tight">${activeMeta}</span>
@@ -1270,6 +1275,7 @@
 
         function populateHomeEditorFields() {
             const h = siteData.homeSettings;
+            if(!h) return;
             document.getElementById('edit-badge1').value = h.badge1 || '';
             document.getElementById('edit-title1').value = h.title1 || '';
             document.getElementById('edit-title2').value = h.title2 || '';
@@ -1289,6 +1295,7 @@
 
         function populateProfileEditorFields() {
             const p = siteData.profile;
+            if(!p) return;
             document.getElementById('edit-profile-name').value = p.displayName || '';
             document.getElementById('edit-profile-age').value = p.age || '';
             document.getElementById('edit-profile-email').value = p.email || '';
@@ -1393,6 +1400,7 @@
 
         function renderMessages() {
             const container = document.getElementById('admin-messages-container');
+            if(!container) return;
             if(!siteData.messages || siteData.messages.length === 0) {
                 container.innerHTML = `<p class="font-medium text-gray-500 text-center py-8">Inbox is empty!</p>`;
                 return;
@@ -1544,7 +1552,7 @@
             }
             displayStack.innerHTML = relevantReviews.slice().reverse().map(rev => `
                 <div class="flex gap-3 items-start bg-white/60 dark:bg-slate-900/40 p-4 rounded-xl border border-gray-100 dark:border-slate-700 shadow-sm pop-in">
-                    <img src="${rev.profileImg || fallbackMainLogo}" class="w-10 h-10 rounded-full object-cover border-2 border-white dark:border-gray-700 shadow-sm">
+                    <img src="${rev.profileImg || fallbackMainLogo}" class="w-10 h-10 rounded-full object-cover border-2 border-white dark:border-gray-700 shadow-sm" onerror="this.src='${fallbackMainLogo}'">
                     <div class="flex-grow">
                         <div class="flex justify-between items-center mb-1">
                             <span class="font-bold text-sm text-gray-900 dark:text-gray-100">${rev.username}</span>
@@ -1623,60 +1631,84 @@
 
             // Assets Tab
             if(!siteData['studio-assets']) siteData['studio-assets'] = [];
-            const filteredAssets = siteData['studio-assets'].filter(item => 
-                currentCategoryFilter === 'All' || item.category === currentCategoryFilter
-            );
+            
+            const assetSearchVal = document.getElementById('asset-search-input').value.toLowerCase().trim();
+            const filteredAssets = siteData['studio-assets'].filter(item => {
+                const matchesCategory = (currentCategoryFilter === 'All' || item.category === currentCategoryFilter);
+                const matchesSearch = (!assetSearchVal || item.title.toLowerCase().includes(assetSearchVal) || item.desc.toLowerCase().includes(assetSearchVal));
+                return matchesCategory && matchesSearch;
+            });
 
-            if(filteredAssets.length === 0) {
-                document.getElementById('assets-container').innerHTML = `<p class="text-gray-500 font-medium col-span-full py-4 text-center">No items found in this category.</p>`;
-            } else {
-                document.getElementById('assets-container').innerHTML = filteredAssets.map((item, index) => {
-                    const actualIndex = siteData['studio-assets'].indexOf(item);
-                    return `
-                    <div class="glass-card overflow-hidden hover-pop pop-in delay-${(index % 3) + 1} relative group flex flex-col cursor-pointer" onclick="expandAssetView('${item.img}', '${item.title}', '${item.desc}', '${item.category}')">
-                        ${isAdmin ? `<button onclick="event.stopPropagation(); deleteItem('studio-assets', ${actualIndex})" class="absolute top-3 left-3 bg-red-500/90 text-white rounded-lg px-3 py-1 text-sm font-bold shadow-sm z-10 hover:bg-red-600 transition backdrop-blur-sm"><i class="fa-solid fa-trash mr-1"></i> Delete</button>` : ''}
-                        <div class="absolute top-3 right-3 bg-white/90 dark:bg-slate-800/90 text-gray-800 dark:text-gray-200 rounded-lg px-3 py-1 text-xs font-bold shadow-sm z-10 border border-gray-200 dark:border-gray-700">${item.category}</div>
-                        <img src="${item.img}" class="w-full h-48 object-cover">
-                        <div class="p-6 flex-grow flex flex-col justify-between">
-                            <div>
-                                <h3 class="text-xl font-bold mb-2 text-gray-900 dark:text-white">${item.title}</h3>
-                                <p class="font-medium text-gray-600 dark:text-gray-400 mb-6 text-sm line-clamp-2">${item.desc}</p>
+            const assetsContainer = document.getElementById('assets-container');
+            if(assetsContainer) {
+                if(filteredAssets.length === 0) {
+                    assetsContainer.innerHTML = `<p class="text-gray-500 font-medium col-span-full py-4 text-center">No items found matching criteria.</p>`;
+                } else {
+                    assetsContainer.innerHTML = filteredAssets.map((item, index) => {
+                        const actualIndex = siteData['studio-assets'].indexOf(item);
+                        return `
+                        <div class="glass-card overflow-hidden hover-pop pop-in delay-${(index % 3) + 1} relative group flex flex-col cursor-pointer" onclick="expandAssetView('${item.img}', '${item.title}', '${item.desc}', '${item.category}')">
+                            ${isAdmin ? `<button onclick="event.stopPropagation(); deleteItem('studio-assets', ${actualIndex})" class="absolute top-3 left-3 bg-red-500/90 text-white rounded-lg px-3 py-1 text-sm font-bold shadow-sm z-10 hover:bg-red-600 transition backdrop-blur-sm"><i class="fa-solid fa-trash mr-1"></i> Delete</button>` : ''}
+                            <div class="absolute top-3 right-3 bg-white/90 dark:bg-slate-800/90 text-gray-800 dark:text-gray-200 rounded-lg px-3 py-1 text-xs font-bold shadow-sm z-10 border border-gray-200 dark:border-gray-700">${item.category}</div>
+                            <img src="${item.img}" class="w-full h-48 object-cover" onerror="this.src='https://images.unsplash.com/photo-1605342417730-10ebcb1a1ab5?w=500&q=80'">
+                            <div class="p-6 flex-grow flex flex-col justify-between">
+                                <div>
+                                    <h3 class="text-xl font-bold mb-2 text-gray-900 dark:text-white">${item.title}</h3>
+                                    <p class="font-medium text-gray-600 dark:text-gray-400 mb-6 text-sm line-clamp-2">${item.desc}</p>
+                                </div>
+                                <a href="${item.file}" download="${item.filename || 'asset.lua'}" onclick="event.stopPropagation();" class="block text-center w-full btn-cartoon py-2 text-sm">
+                                    <i class="fa-solid fa-download mr-1"></i> Download
+                                </a>
                             </div>
-                            <a href="${item.file}" download="${item.filename || 'asset.lua'}" onclick="event.stopPropagation();" class="block text-center w-full btn-cartoon py-2 text-sm">
-                                <i class="fa-solid fa-download mr-1"></i> Download
-                            </a>
                         </div>
-                    </div>
-                `}).join('');
+                    `}).join('');
+                }
             }
 
-            // Achievements Tab
+            // Achievements Tab Completion
             if(!siteData.achievement) siteData.achievement = [];
-            document.getElementById('achievements-container').innerHTML = siteData.achievement.map((item, index) => `
-                <div class="glass-card p-6 relative hover-pop pop-in delay-${(index % 3) + 1}">
-                    ${isAdmin ? `<button onclick="deleteItem('achievement', ${index})" class="absolute top-4 left-4 bg-red-500/90 text-white rounded-lg px-3 py-1 text-sm font-bold shadow-sm z-20 hover:bg-red-600 transition backdrop-blur-sm"><i class="fa-solid fa-trash mr-1"></i> Delete</button>` : ''}
-                    <div class="absolute -top-5 -right-4 bg-yellow-500 w-12 h-12 rounded-full flex items-center justify-center text-xl shadow-md z-10 text-white">
-                        <i class="fa-solid fa-trophy"></i>
-                    </div>
-                    <img src="${item.img}" class="w-full h-48 object-cover rounded-xl shadow-sm mb-5">
-                    <h3 class="text-xl font-bold mb-2 text-gray-900 dark:text-white">${item.title}</h3>
-                    <p class="font-medium text-gray-600 dark:text-gray-400 text-sm">${item.desc}</p>
-                </div>
-            `).join('');
+            const achievementsContainer = document.getElementById('achievements-container');
+            if (achievementsContainer) {
+                if(siteData.achievement.length === 0) {
+                    achievementsContainer.innerHTML = `<p class="text-gray-500 font-medium col-span-full py-4 text-center">No achievements posted yet.</p>`;
+                } else {
+                    achievementsContainer.innerHTML = siteData.achievement.map((item, index) => `
+                        <div class="glass-card overflow-hidden hover-pop pop-in delay-${(index % 3) + 1} relative group p-6 flex flex-col justify-between">
+                            ${isAdmin ? `<button onclick="deleteItem('achievement', ${index})" class="absolute top-3 left-3 bg-red-500/90 text-white rounded-lg px-3 py-1 text-xs font-bold shadow-sm z-10 hover:bg-red-600 transition backdrop-blur-sm"><i class="fa-solid fa-trash mr-1"></i> Delete</button>` : ''}
+                            <div class="flex items-center gap-4 mb-4">
+                                <img src="${item.img || 'https://images.unsplash.com/photo-1605342417730-10ebcb1a1ab5?w=500&q=80'}" class="w-16 h-16 rounded-xl object-cover border border-gray-200 dark:border-gray-700 shadow-sm" onerror="this.src='https://images.unsplash.com/photo-1605342417730-10ebcb1a1ab5?w=500&q=80'">
+                                <div>
+                                    <h3 class="text-xl font-bold text-gray-900 dark:text-white">${item.title}</h3>
+                                    <p class="text-xs text-brand-primary font-semibold">Milestone Unlocked</p>
+                                </div>
+                            </div>
+                            <p class="font-medium text-gray-600 dark:text-gray-400 text-sm mb-2">${item.desc}</p>
+                        </div>
+                    `).join('');
+                }
+            }
 
-            // YouTube Tab
+            // YouTube Tab Completion
             if(!siteData.youtube) siteData.youtube = [];
-            document.getElementById('youtube-container').innerHTML = siteData.youtube.map((item, index) => {
-                let frameOutput = item.video ? `<iframe class="w-full h-72 rounded-xl mb-5 shadow-sm" src="${formatEmbedSource(item.video)}" title="YouTube video view" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>` : '';
-                return `
-                <div class="glass-card p-6 hover-pop pop-in delay-${(index % 2) + 1} relative">
-                    ${isAdmin ? `<button onclick="deleteItem('youtube', ${index})" class="absolute -top-3 -left-3 bg-red-500/90 text-white rounded-lg px-3 py-1 text-sm font-bold shadow-md z-20 hover:bg-red-600 transition backdrop-blur-sm"><i class="fa-solid fa-trash mr-1"></i> Delete</button>` : ''}
-                    ${frameOutput}
-                    <h3 class="text-xl font-bold mb-2 text-gray-900 dark:text-white">${item.title}</h3>
-                    <p class="font-medium text-gray-600 dark:text-gray-400 text-sm">${item.desc}</p>
-                </div>
-                `;
-            }).join('');
+            const youtubeContainer = document.getElementById('youtube-container');
+            if (youtubeContainer) {
+                if(siteData.youtube.length === 0) {
+                    youtubeContainer.innerHTML = `<p class="text-gray-500 font-medium col-span-full py-4 text-center">No video tutorials uploaded yet.</p>`;
+                } else {
+                    youtubeContainer.innerHTML = siteData.youtube.map((item, index) => `
+                        <div class="glass-card overflow-hidden hover-pop pop-in delay-${(index % 2) + 1} relative group flex flex-col">
+                            ${isAdmin ? `<button onclick="deleteItem('youtube', ${index})" class="absolute top-3 left-3 bg-red-500/90 text-white rounded-lg px-3 py-1 text-xs font-bold shadow-sm z-10 hover:bg-red-600 transition backdrop-blur-sm"><i class="fa-solid fa-trash mr-1"></i> Delete</button>` : ''}
+                            <div class="aspect-video w-full bg-black relative">
+                                <iframe class="w-full h-full" src="${formatEmbedSource(item.video)}" title="${item.title}" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+                            </div>
+                            <div class="p-6 flex-grow">
+                                <h3 class="text-xl font-bold mb-2 text-gray-900 dark:text-white">${item.title}</h3>
+                                <p class="font-medium text-gray-600 dark:text-gray-400 text-sm">${item.desc}</p>
+                            </div>
+                        </div>
+                    `).join('');
+                }
+            }
         }
     </script>
 </body>
